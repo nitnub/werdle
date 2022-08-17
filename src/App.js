@@ -1,32 +1,35 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-
+import Keyboard from './components/Keyboard';
 function Row({
   id,
   board,
   round,
   solution,
-  currentLetter,
+  // currentLetter,
   letterIndex,
   roundIndex,
   roundOver,
   setRoundOver,
+  checkLetter,
+  keyColors,
+  setKeyColors,
 }) {
   const [classes, setClasses] = useState('box');
 
-  const checkAnswer = () => {
-    const classList = round.map((letter, index) =>
-      checkLetter(letter, index, solution)
-    );
-    return classList;
-  };
-
   useEffect(() => {
+    const checkAnswer = () => {
+      const classList = round.map((letter, index) =>
+        checkLetter(letter, index, solution, keyColors)
+      );
+      return classList;
+    };
+
     if (roundOver && id < roundIndex) {
       setClasses(checkAnswer());
     }
     setRoundOver(false);
-  }, [checkAnswer]);
+  }, [id, roundIndex, roundOver, setRoundOver]);
 
   return (
     <div className="row">
@@ -52,28 +55,48 @@ for (let i = 0; i < NUM_OF_ROUNDS; i++) {
   game.push([...round]);
 }
 
-const checkLetter = (letter, index, solution) => {
-  const correctLetter = solution.slice(index, index + 1);
-  console.log('correct letter: ', correctLetter);
-  // console.log('solution.split: ', solution.split('').indexOf(letter));
-  if (correctLetter === letter) {
-    // console.log('CORRECT!');
-    return 'correct';
-  } else if (solution.split('').indexOf(letter) >= 0) {
-    return 'close';
-  } else {
-    return 'incorrect';
-  }
+// Default Key Colors
+
+const defaultKeyColors = {
+  Q: 'unselected',
+  W: 'unselected',
+  E: 'unselected',
+  R: 'unselected',
+  T: 'unselected',
+  Y: 'unselected',
+  U: 'unselected',
+  I: 'unselected',
+  O: 'unselected',
+  P: 'unselected',
+  A: 'unselected',
+  S: 'unselected',
+  D: 'unselected',
+  F: 'unselected',
+  G: 'unselected',
+  H: 'unselected',
+  J: 'unselected',
+  K: 'unselected',
+  L: 'unselected',
+  ENTER: 'unselected',
+  Z: 'unselected',
+  X: 'unselected',
+  C: 'unselected',
+  V: 'unselected',
+  B: 'unselected',
+  N: 'unselected',
+  M: 'unselected',
+  DEL: 'unselected',
 };
 
 function App() {
   const [solution, setSolution] = useState('');
   const [board, setBoard] = useState(game);
-  const [currentLetter, setCurrentLetter] = useState('');
-  const [currentRound, setCurrentRound] = useState(round);
+  // const [currentLetter, setCurrentLetter] = useState('');
+  // const [currentRound, setCurrentRound] = useState(round);
   const [roundIndex, setRoundIndex] = useState(0);
   const [letterIndex, setLetterIndex] = useState(0);
   const [roundOver, setRoundOver] = useState(false);
+  const [keyColors, setKeyColors] = useState(defaultKeyColors);
 
   // Fetch word list and set solution to random word.
   useEffect(() => {
@@ -86,8 +109,81 @@ function App() {
     getWord();
   }, []);
 
+  const solutionArray = solution.split('');
+  const updateKeyColors = () => {
+    if (roundOver) {
+      board[roundIndex - 1].map((guess, index) => {
+        if (keyColors[guess] === 'correct') {
+          console.log('catch1');
+          return;
+
+          return;
+        } else if (guess === solutionArray[index]) {
+          console.log('catch2');
+          setKeyColors((keyColors) => {
+            return { ...keyColors, [guess]: 'correct' };
+          });
+          return;
+        } else if (solution.indexOf(guess) >= 0) {
+          console.log('catch3');
+          setKeyColors((keyColors) => {
+            return { ...keyColors, [guess]: 'close' };
+          });
+          return;
+        } else console.log('catch4');
+
+        setKeyColors((keyColors) => {
+          return { ...keyColors, [guess]: 'incorrect' };
+        });
+        // return;
+      });
+    }
+  };
+  useEffect(() => {
+  updateKeyColors();
+  console.log(keyColors)
+  }, [updateKeyColors, keyColors])
+
   const checkRound = (roundId) => {
     console.warn('CHECK ROUND', roundId);
+  };
+
+  const checkLetter = (letter, index, solution, keyColors) => {
+    console.log('updated KC: ', keyColors);
+    const correctLetter = solution.slice(index, index + 1);
+    // console.log('correct letter: ', correctLetter);
+    // console.log('CHECKING LETTER', letter);
+    // console.log('solution.split: ', solution.split('').indexOf(letter));
+    if (correctLetter === letter) {
+      // console.log('CORRECT!', letter);
+      const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
+      // keyColorsCopy[letter] = 'correct';
+      // setKeyColors((keyColorsCopy) => keyColorsCopy);
+      setKeyColors(keyColorsCopy);
+      console.log('kccopy ', keyColorsCopy);
+      return 'correct';
+    } else if (solution.split('').indexOf(letter) >= 0) {
+      console.log(keyColors);
+      console.log(keyColors[letter]);
+      if (keyColors[letter] === 'unselected') {
+        const keyColorsCopy = { ...keyColors, [letter]: 'close' };
+        // keyColorsCopy[letter] = 'close';
+        // setKeyColors((keyColorsCopy) => keyColorsCopy);
+        setKeyColors(keyColorsCopy);
+        console.log(keyColorsCopy);
+      }
+      return 'close';
+    } else {
+      if (solution.split('').indexOf(letter) === -1) {
+        const keyColorsCopy = { ...keyColors, [letter]: 'incorrect' };
+        // keyColorsCopy[letter] = 'incorrect' ;
+        // setKeyColors((keyColorsCopy) => keyColorsCopy);
+        setKeyColors(keyColorsCopy);
+        console.log(keyColorsCopy);
+      }
+      console.log('incorrect ', letter);
+      return 'incorrect';
+    }
   };
 
   console.log(solution);
@@ -123,7 +219,7 @@ function App() {
 
         default:
           if (letterIndex < 5) {
-            setCurrentLetter(e.key.toUpperCase());
+            // setCurrentLetter(e.key.toUpperCase());
             setLetterIndex((letterIndex) => letterIndex + 1);
             const boardCopy = [...board];
             boardCopy[roundIndex][letterIndex] = e.key.toUpperCase();
@@ -136,7 +232,7 @@ function App() {
     window.addEventListener('keydown', keyEvent);
 
     return () => window.removeEventListener('keydown', keyEvent);
-  }, [currentRound.length, letterIndex, board, currentRound, roundIndex]);
+  }, [letterIndex, board, roundIndex]);
 
   return (
     <div className="game-container">
@@ -147,13 +243,17 @@ function App() {
           board={board}
           round={board[index]}
           roundIndex={roundIndex}
-          currentLetter={round[index]}
+          // currentLetter={round[index]}
           solution={solution}
           letterIndex={letterIndex}
           roundOver={roundOver}
           setRoundOver={setRoundOver}
+          keyColors={keyColors}
+          setKeyColors={setKeyColors}
+          checkLetter={checkLetter}
         />
       ))}
+      <Keyboard keyColors={keyColors} />
     </div>
   );
 }

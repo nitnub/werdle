@@ -1,17 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 body {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgb(12, 10, 10);
-  font-size: 2.25em;
   color: white;
+  font-size: 2.25em;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
 }
 
 .game-container {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  align-items: center;
 }
 
 .row {
@@ -23,19 +28,58 @@ body {
   display: flex;
   width: 64px;
   height: 64px;
-  border: 1px solid rgb(92, 92, 92);
+  border: 2px solid rgb(72, 71, 71);
   justify-content: center;
   align-items: center;
 }
 
+
+
+.keyboard-container {
+  display: flex;
+  font-size: .5em;
+  font-weight: 400;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+
+.keyboard-key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 64px;
+  background-color: rgb(158, 158, 158);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.enter {
+  padding: 0 18px;
+}
+
+.del {
+  padding: 0 12px;
+}
+
+
 .incorrect {
- background-color: rgb(66, 65, 65);
-}
-
-.correct {
-  background-color: rgb(63, 150, 52);
-}
-
-.close {
-  background-color: rgb(177, 179, 36);
-}
+  background-color: rgb(66, 65, 65);
+  border-color: rgb(66, 65, 65);
+ }
+ 
+ .correct {
+   background-color: rgb(63, 150, 52);
+   border-color: rgb(63, 150, 52);
+ }
+ 
+ .close {
+   background-color: rgb(177, 179, 36);
+   border-color: rgb(177, 179, 36);
+ }
