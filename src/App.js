@@ -77,7 +77,6 @@ const defaultKeyColors = {
   J: 'unselected',
   K: 'unselected',
   L: 'unselected',
-  ENTER: 'unselected',
   Z: 'unselected',
   X: 'unselected',
   C: 'unselected',
@@ -85,7 +84,6 @@ const defaultKeyColors = {
   B: 'unselected',
   N: 'unselected',
   M: 'unselected',
-  DEL: 'unselected',
 };
 
 function App() {
@@ -98,6 +96,7 @@ function App() {
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
 
+  const [gameOver, setGameOver] = useState(false);
   // Fetch word list and set solution to random word.
   useEffect(() => {
     const getWord = async () => {
@@ -109,84 +108,59 @@ function App() {
     getWord();
   }, []);
 
-  const solutionArray = solution.split('');
-  const updateKeyColors = () => {
-    if (roundOver) {
-      board[roundIndex - 1].map((guess, index) => {
-        if (keyColors[guess] === 'correct') {
-          console.log('catch1');
-          return;
-
-          return;
-        } else if (guess === solutionArray[index]) {
-          console.log('catch2');
-          setKeyColors((keyColors) => {
-            return { ...keyColors, [guess]: 'correct' };
-          });
-          return;
-        } else if (solution.indexOf(guess) >= 0) {
-          console.log('catch3');
-          setKeyColors((keyColors) => {
-            return { ...keyColors, [guess]: 'close' };
-          });
-          return;
-        } else console.log('catch4');
-
-        setKeyColors((keyColors) => {
-          return { ...keyColors, [guess]: 'incorrect' };
-        });
-        // return;
-      });
-    }
-  };
   useEffect(() => {
-  updateKeyColors();
-  console.log(keyColors)
-  }, [updateKeyColors, keyColors])
+    const solutionArray = solution.split('');
+    const updateKeyColors = () => {
+      if (roundOver) {
+        board[roundIndex - 1].map((guess, index) => {
+          if (keyColors[guess] === 'correct') {
+            return;
+          } else if (guess === solutionArray[index]) {
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'correct' };
+            });
+            return;
+          } else if (solution.indexOf(guess) >= 0) {
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'close' };
+            });
+            return;
+          } else
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'incorrect' };
+            });
+          // return;
+        });
+      }
+    };
+    updateKeyColors();
+    console.log(keyColors);
+  }, [keyColors, board[roundIndex]]);
 
-  const checkRound = (roundId) => {
-    console.warn('CHECK ROUND', roundId);
-  };
-
+  // Compare letter in guess with letters in solution to determine coloring
   const checkLetter = (letter, index, solution, keyColors) => {
-    console.log('updated KC: ', keyColors);
     const correctLetter = solution.slice(index, index + 1);
-    // console.log('correct letter: ', correctLetter);
-    // console.log('CHECKING LETTER', letter);
-    // console.log('solution.split: ', solution.split('').indexOf(letter));
     if (correctLetter === letter) {
-      // console.log('CORRECT!', letter);
       const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
-      // keyColorsCopy[letter] = 'correct';
-      // setKeyColors((keyColorsCopy) => keyColorsCopy);
       setKeyColors(keyColorsCopy);
-      console.log('kccopy ', keyColorsCopy);
+
       return 'correct';
     } else if (solution.split('').indexOf(letter) >= 0) {
-      console.log(keyColors);
-      console.log(keyColors[letter]);
       if (keyColors[letter] === 'unselected') {
         const keyColorsCopy = { ...keyColors, [letter]: 'close' };
-        // keyColorsCopy[letter] = 'close';
-        // setKeyColors((keyColorsCopy) => keyColorsCopy);
         setKeyColors(keyColorsCopy);
-        console.log(keyColorsCopy);
       }
+
       return 'close';
     } else {
       if (solution.split('').indexOf(letter) === -1) {
         const keyColorsCopy = { ...keyColors, [letter]: 'incorrect' };
-        // keyColorsCopy[letter] = 'incorrect' ;
-        // setKeyColors((keyColorsCopy) => keyColorsCopy);
         setKeyColors(keyColorsCopy);
-        console.log(keyColorsCopy);
       }
-      console.log('incorrect ', letter);
+
       return 'incorrect';
     }
   };
-
-  console.log(solution);
 
   useEffect(() => {
     const keyEvent = (e) => {
@@ -205,7 +179,7 @@ function App() {
             setRoundOver(true);
           }
 
-          return; // check round
+          return;
         }
 
         case 'Backspace': {
@@ -218,8 +192,8 @@ function App() {
         }
 
         default:
-          if (letterIndex < 5) {
-            // setCurrentLetter(e.key.toUpperCase());
+          const isSingleAlphaChar = /^[a-zA-Z]$/; // Passed testing on https://regex101.com/
+          if (letterIndex < 5 && isSingleAlphaChar.test(e.key)) {
             setLetterIndex((letterIndex) => letterIndex + 1);
             const boardCopy = [...board];
             boardCopy[roundIndex][letterIndex] = e.key.toUpperCase();
@@ -241,7 +215,7 @@ function App() {
           key={index}
           id={index}
           board={board}
-          round={board[index]}
+          round={round}
           roundIndex={roundIndex}
           // currentLetter={round[index]}
           solution={solution}
