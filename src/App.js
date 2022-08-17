@@ -1,16 +1,37 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 
-function Row({ id, round, solution, currentLetter, letterIndex, roundIndex }) {
+function Row({
+  id,
+  board,
+  round,
+  solution,
+  currentLetter,
+  letterIndex,
+  roundIndex,
+  roundOver,
+  setRoundOver,
+}) {
   const [classes, setClasses] = useState('box');
 
-  const letterClass = checkLetter(currentLetter, letterIndex - 1, solution);
-  // console.log(letterClass);
+  const checkAnswer = () => {
+    const classList = round.map((letter, index) =>
+      checkLetter(letter, index, solution)
+    );
+    return classList;
+  };
+
+  useEffect(() => {
+    if (roundOver && id < roundIndex) {
+      setClasses(checkAnswer());
+    }
+    setRoundOver(false);
+  }, [checkAnswer]);
 
   return (
     <div className="row">
       {round.map((letter, index) => (
-        <div key={index} className={classes}>
+        <div key={index} className={'box ' + classes[index]}>
           {letter}
         </div>
       ))}
@@ -19,8 +40,8 @@ function Row({ id, round, solution, currentLetter, letterIndex, roundIndex }) {
 }
 
 // Word resource link
-// const WORD_LIST_URL = './res/words.json';
-const WORD_LIST_URL = './res/words.test.json';
+const WORD_LIST_URL = './res/words.json';
+// const WORD_LIST_URL = './res/words.test.json';
 const WORD_LENGTH = 5;
 const NUM_OF_ROUNDS = 6;
 
@@ -52,7 +73,9 @@ function App() {
   const [currentRound, setCurrentRound] = useState(round);
   const [roundIndex, setRoundIndex] = useState(0);
   const [letterIndex, setLetterIndex] = useState(0);
+  const [roundOver, setRoundOver] = useState(false);
 
+  // Fetch word list and set solution to random word.
   useEffect(() => {
     const getWord = async () => {
       const wordList = await fetch(WORD_LIST_URL);
@@ -69,7 +92,6 @@ function App() {
 
   console.log(solution);
 
-
   useEffect(() => {
     const keyEvent = (e) => {
       console.log(e.key);
@@ -79,7 +101,12 @@ function App() {
             console.log('Not enough letters!');
           } else {
             console.log('Check vs correct word');
-            console.log(currentRound)
+            console.log(board[roundIndex]);
+            setRoundIndex((roundIndex) =>
+              Math.min(NUM_OF_ROUNDS, roundIndex + 1)
+            );
+            setLetterIndex((letterIndex) => 0);
+            setRoundOver(true);
           }
 
           return; // check round
@@ -87,17 +114,9 @@ function App() {
 
         case 'Backspace': {
           const newIndex = Math.max(0, letterIndex - 1);
-          // const currentRoundCopy = [...currentRound];
-          // currentRoundCopy[letterIndex - 1] = ' ';
-          // setCurrentRound(currentRoundCopy
-          // );
-          const boardCopy = [...board]
-          // boardCopy[roundIndex] = currentRound
-          boardCopy[roundIndex][letterIndex - 1] = ' '
-          setBoard(boardCopy)
-          // setCurrentRound((currentRound) =>
-          //   [...currentRound].splice(letterIndex, 1, ' ')
-          // );
+          const boardCopy = [...board];
+          boardCopy[roundIndex][letterIndex - 1] = ' ';
+          setBoard(boardCopy);
           setLetterIndex(newIndex);
           return;
         }
@@ -105,15 +124,10 @@ function App() {
         default:
           if (letterIndex < 5) {
             setCurrentLetter(e.key.toUpperCase());
-            // const currentRoundCopy = [...currentRound];
-            // currentRoundCopy[letterIndex] = e.key.toUpperCase();
-            // setCurrentRound(currentRoundCopy);
             setLetterIndex((letterIndex) => letterIndex + 1);
-            const boardCopy = [...board]
-            // boardCopy[roundIndex] = currentRound
-            boardCopy[roundIndex][letterIndex] = e.key.toUpperCase()
-            setBoard(boardCopy)
-
+            const boardCopy = [...board];
+            boardCopy[roundIndex][letterIndex] = e.key.toUpperCase();
+            setBoard(boardCopy);
             return;
           }
       }
@@ -130,12 +144,14 @@ function App() {
         <Row
           key={index}
           id={index}
-          // round={currentRound}
-          round={board[index] }
+          board={board}
+          round={board[index]}
           roundIndex={roundIndex}
           currentLetter={round[index]}
           solution={solution}
           letterIndex={letterIndex}
+          roundOver={roundOver}
+          setRoundOver={setRoundOver}
         />
       ))}
     </div>
