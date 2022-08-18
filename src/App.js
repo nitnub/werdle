@@ -182,6 +182,7 @@ function App() {
             setRoundOver={setRoundOver}
             checkLetter={checkLetter}
             keyColors={keyColors}
+            solution={solution}
           />
         ))
       )}

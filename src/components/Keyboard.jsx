@@ -10,7 +10,7 @@ const Keyboard = ({ keyColors }) => {
   }
   return (
     <div className="keyboard-container">
-      <button><a href="https://www.flaticon.com/free-icons/delete" title="delete icons">Delete icons created by Those Icons - Flaticon</a></button>
+     
       {keyList.map((row) => {
         return (
           <div key={row[0]} className="keyboard-row">

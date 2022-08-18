@@ -25,7 +25,7 @@ const Row = ({
       setClasses(checkAnswer());
     }
     setRoundOver(false);
-  }, [id, roundIndex, roundOver, setRoundOver]);
+  }, [id, roundIndex, roundOver, setRoundOver, solution, keyColors, round, checkLetter]);
 
   return (
     <div className="row">
