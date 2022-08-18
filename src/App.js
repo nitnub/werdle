@@ -1,46 +1,9 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import Keyboard from './components/Keyboard';
-function Row({
-  id,
-  board,
-  round,
-  solution,
-  // currentLetter,
-  letterIndex,
-  roundIndex,
-  roundOver,
-  setRoundOver,
-  checkLetter,
-  keyColors,
-  setKeyColors,
-}) {
-  const [classes, setClasses] = useState('box');
+import Row from './components/Row';
+import GameOver from './components/GameOver';
 
-  useEffect(() => {
-    const checkAnswer = () => {
-      const classList = round.map((letter, index) =>
-        checkLetter(letter, index, solution, keyColors)
-      );
-      return classList;
-    };
-
-    if (roundOver && id < roundIndex) {
-      setClasses(checkAnswer());
-    }
-    setRoundOver(false);
-  }, [id, roundIndex, roundOver, setRoundOver]);
-
-  return (
-    <div className="row">
-      {round.map((letter, index) => (
-        <div key={index} className={'box ' + classes[index]}>
-          {letter}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // Word resource link
 const WORD_LIST_URL = './res/words.json';
@@ -89,14 +52,14 @@ const defaultKeyColors = {
 function App() {
   const [solution, setSolution] = useState('');
   const [board, setBoard] = useState(game);
-  // const [currentLetter, setCurrentLetter] = useState('');
-  // const [currentRound, setCurrentRound] = useState(round);
   const [roundIndex, setRoundIndex] = useState(0);
   const [letterIndex, setLetterIndex] = useState(0);
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
 
+  // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
+
   // Fetch word list and set solution to random word.
   useEffect(() => {
     const getWord = async () => {
@@ -134,7 +97,6 @@ function App() {
       }
     };
     updateKeyColors();
-    console.log(keyColors);
   }, [keyColors, board[roundIndex]]);
 
   // Compare letter in guess with letters in solution to determine coloring
@@ -168,10 +130,7 @@ function App() {
       switch (e.key) {
         case 'Enter': {
           if (letterIndex < 5) {
-            console.log('Not enough letters!');
           } else {
-            console.log('Check vs correct word');
-            console.log(board[roundIndex]);
             setRoundIndex((roundIndex) =>
               Math.min(NUM_OF_ROUNDS, roundIndex + 1)
             );
@@ -191,8 +150,8 @@ function App() {
           return;
         }
 
-        default:
-          const isSingleAlphaChar = /^[a-zA-Z]$/; // Passed testing on https://regex101.com/
+        default: // Passed testing on https://regex101.com/
+          const isSingleAlphaChar = /^[a-zA-Z]$/;
           if (letterIndex < 5 && isSingleAlphaChar.test(e.key)) {
             setLetterIndex((letterIndex) => letterIndex + 1);
             const boardCopy = [...board];
@@ -210,23 +169,22 @@ function App() {
 
   return (
     <div className="game-container">
-      {board.map((round, index) => (
-        <Row
-          key={index}
-          id={index}
-          board={board}
-          round={round}
-          roundIndex={roundIndex}
-          // currentLetter={round[index]}
-          solution={solution}
-          letterIndex={letterIndex}
-          roundOver={roundOver}
-          setRoundOver={setRoundOver}
-          keyColors={keyColors}
-          setKeyColors={setKeyColors}
-          checkLetter={checkLetter}
-        />
-      ))}
+      {gameOver ? (
+        <GameOver />
+      ) : (
+        board.map((round, index) => (
+          <Row
+            key={index}
+            id={index}
+            round={round}
+            roundIndex={roundIndex}
+            roundOver={roundOver}
+            setRoundOver={setRoundOver}
+            checkLetter={checkLetter}
+            keyColors={keyColors}
+          />
+        ))
+      )}
       <Keyboard keyColors={keyColors} />
     </div>
   );
