@@ -28,6 +28,14 @@ body {
   justify-content: center;
 }
 
+.game-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  height: 100%;
+  gap: 6px;
+}
+
 .row {
   display: flex;
   gap: 6px;
