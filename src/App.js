@@ -56,9 +56,11 @@ function App() {
   const [letterIndex, setLetterIndex] = useState(0);
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
-
+  
   // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
+  const [outcome, setOutcome] = useState(0)
+  console.log('rendering!')
 
   // Fetch word list and set solution to random word.
   useEffect(() => {
@@ -73,6 +75,7 @@ function App() {
 
   // Set keyboard colors / classes
   useEffect(() => {
+    console.log('setting colors')
     const solutionArray = solution.split('');
     const updateKeyColors = () => {
       if (roundOver) {
@@ -125,18 +128,35 @@ function App() {
     }
   };
 
+  const checkGameOver = () => {
+    const response = board[roundIndex].join('')
+
+    if (solution === response) {
+      setGameOver(true);
+      setOutcome(1);
+    } else if (roundIndex === NUM_OF_ROUNDS - 1) {
+      setGameOver(true);
+      setOutcome(2);
+    }
+    
+  }
   // Interpret key events
+  // TODO: add useCallback
   const keyEvent = (letter) => {
     console.log(letter);
+    console.log(gameOver);
+    if (gameOver) return;
     switch (letter) {
       case 'Enter': {
-        if (letterIndex < 5) {
-        } else {
+        if (letterIndex >= 5) {
+          
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
           setLetterIndex(() => 0);
           setRoundOver(true);
+          
+          checkGameOver()
         }
 
         break;
@@ -170,16 +190,16 @@ function App() {
     window.addEventListener('keydown', physicalKeyEvent);
 
     return () => window.removeEventListener('keydown', physicalKeyEvent);
-  });
+  }, [board, keyEvent]);
 
   return (
     <div className="container">
       <Header />
       <div className="game-container">
-        {gameOver ? (
-          <GameOver />
-        ) : (
-          <div className="game-board">
+        {outcome  >= 1 && 
+          <GameOver outcome={outcome} setOutcome={setOutcome} solution={solution}/>
+}
+         {outcome < 1 && <div className="game-board">
             {board.map((round, index) => (
               <Row
                 key={index}
@@ -194,7 +214,8 @@ function App() {
               />
             ))}
           </div>
-        )}
+        
+            }
         
       </div>
       <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
