@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
+import Header from './components/Header';
 import Keyboard from './components/Keyboard';
 import Row from './components/Row';
 import GameOver from './components/GameOver';
@@ -124,7 +125,7 @@ function App() {
     }
   };
 
-  // Touch buttons
+  // Interpret key events
   const keyEvent = (letter) => {
     console.log(letter);
     switch (letter) {
@@ -138,7 +139,7 @@ function App() {
           setRoundOver(true);
         }
 
-        return;
+        break;
       }
       case 'Del':
       case 'Backspace': {
@@ -147,7 +148,7 @@ function App() {
         boardCopy[roundIndex][letterIndex - 1] = ' ';
         setBoard(boardCopy);
         setLetterIndex(newIndex);
-        return;
+        break;
       }
 
       default: // Passed testing on https://regex101.com/
@@ -157,7 +158,7 @@ function App() {
           const boardCopy = [...board];
           boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
           setBoard(boardCopy);
-          return;
+          break;
         }
     }
   };
@@ -169,29 +170,33 @@ function App() {
     window.addEventListener('keydown', physicalKeyEvent);
 
     return () => window.removeEventListener('keydown', physicalKeyEvent);
-  }); 
+  });
 
   return (
-    <div className="game-container">
-      {gameOver ? (
-        <GameOver />
-      ) : (
-        <div className="game-board">
-          {board.map((round, index) => (
-            <Row
-              key={index}
-              id={index}
-              round={round}
-              roundIndex={roundIndex}
-              roundOver={roundOver}
-              setRoundOver={setRoundOver}
-              checkLetter={checkLetter}
-              keyColors={keyColors}
-              solution={solution}
-            />
-          ))}
-        </div>
-      )}
+    <div className="container">
+      <Header />
+      <div className="game-container">
+        {gameOver ? (
+          <GameOver />
+        ) : (
+          <div className="game-board">
+            {board.map((round, index) => (
+              <Row
+                key={index}
+                id={index}
+                round={round}
+                roundIndex={roundIndex}
+                roundOver={roundOver}
+                setRoundOver={setRoundOver}
+                checkLetter={checkLetter}
+                keyColors={keyColors}
+                solution={solution}
+              />
+            ))}
+          </div>
+        )}
+        
+      </div>
       <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
     </div>
   );
