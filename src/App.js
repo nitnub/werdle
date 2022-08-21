@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard';
 import Row from './components/Row';
@@ -17,6 +17,8 @@ let game = [];
 for (let i = 0; i < NUM_OF_ROUNDS; i++) {
   game.push([...round]);
 }
+
+
 
 // Default Key Colors
 
@@ -60,7 +62,7 @@ function App() {
   // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0)
-  console.log('rendering!')
+  // console.log('rendering!')
 
   // Fetch word list and set solution to random word.
   useEffect(() => {
@@ -75,9 +77,11 @@ function App() {
 
   // Set keyboard colors / classes
   useEffect(() => {
-    console.log('setting colors')
+    // console.log('setting colors')
+    
     const solutionArray = solution.split('');
     const updateKeyColors = () => {
+      // If NUM_OF_ROUNDS
       if (roundOver) {
         board[roundIndex - 1].map((guess, index) => {
           if (keyColors[guess] === 'correct') {
@@ -100,11 +104,13 @@ function App() {
         });
       }
     };
-    updateKeyColors();
-  }, [keyColors, board[roundIndex]]);
+    roundIndex < NUM_OF_ROUNDS - 2 && updateKeyColors();
+  // }, [keyColors, board[roundIndex]]);
+  });
 
   // Compare letter in guess with letters in solution to determine gameboard coloring
   const checkLetter = (letter, index, solution, keyColors) => {
+
     const correctLetter = solution.slice(index, index + 1);
     if (correctLetter === letter) {
       const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
@@ -129,19 +135,84 @@ function App() {
   };
 
   const checkGameOver = () => {
+    console.warn('checking game over...')
     const response = board[roundIndex].join('')
+    console.log(`roundIndex: `, roundIndex)
+
 
     if (solution === response) {
       setGameOver(true);
       setOutcome(1);
-    } else if (roundIndex === NUM_OF_ROUNDS - 1) {
+    } else if (roundIndex === NUM_OF_ROUNDS -1) {
+      // console.warn('hit else if...')
       setGameOver(true);
       setOutcome(2);
     }
-    
   }
+
+
+  console.log(`roundIndex: `, roundIndex)
+  console.log(`board[roundInde]: `, board[roundIndex])
+  console.log(`round: `, round)
+
+
+
+
+
+
+  
   // Interpret key events
   // TODO: add useCallback
+  // const keyEvent = useCallback((letter) =>  {
+  //     // console.log(letter);
+  //     // console.log(gameOver);
+  //     if (gameOver) return;
+  //     switch (letter) {
+  //       case 'Enter': {
+  //         if (letterIndex >= 5) {
+            
+  //           setRoundIndex((roundIndex) =>
+  //             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
+  //           );
+  //           setLetterIndex(() => 0);
+  //           setRoundOver(true);
+            
+  //           checkGameOver()
+  //         }
+  
+  //         break;
+  //       }
+  //       case 'Del':
+  //       case 'Backspace': {
+  //         const newIndex = Math.max(0, letterIndex - 1);
+  //         const boardCopy = [...board];
+  //         boardCopy[roundIndex][letterIndex - 1] = ' ';
+  //         setBoard(boardCopy);
+  //         setLetterIndex(newIndex);
+  //         break;
+  //       }
+  
+  //       default: // Passed testing on https://regex101.com/
+  //         const isSingleAlphaChar = /^[a-zA-Z]$/;
+  //         if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
+  //           setLetterIndex((letterIndex) => letterIndex + 1);
+  //           const boardCopy = [...board];
+  //           boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
+  //           setBoard(boardCopy);
+  //           break;
+  //         }
+  //     }
+   
+  // }, [board, letterIndex, gameOver, checkGameOver, roundIndex])
+
+
+
+
+
+
+
+
+
   const keyEvent = (letter) => {
     console.log(letter);
     console.log(gameOver);
@@ -149,13 +220,12 @@ function App() {
     switch (letter) {
       case 'Enter': {
         if (letterIndex >= 5) {
-          
+          console.warn('pressed enter')
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
           setLetterIndex(() => 0);
           setRoundOver(true);
-          
           checkGameOver()
         }
 
@@ -190,7 +260,7 @@ function App() {
     window.addEventListener('keydown', physicalKeyEvent);
 
     return () => window.removeEventListener('keydown', physicalKeyEvent);
-  }, [board, keyEvent]);
+  });
 
   return (
     <div className="container">
