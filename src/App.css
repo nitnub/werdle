@@ -26,7 +26,7 @@ body {
 
 .container {
   display: grid;
-  grid-template-rows: 64px auto 204px;
+  grid-template-rows: 64px auto 240px;
   min-height: 100vh;
 }
 
@@ -34,7 +34,6 @@ body {
   display: flex;
   width: 100vw;
   padding: 0;
-  margin: 0;
   border-bottom: 1px solid var(--clr-border-dk);
 }
 
@@ -67,8 +66,9 @@ body {
   flex-direction: column;
   gap: 6px;
   align-items: center;
-  /* justify-content: space-between; */
   justify-content: center;
+  overflow: auto;
+  margin-top: 16px;
 }
 
 .game-over-container {
@@ -76,8 +76,6 @@ body {
   flex-direction: column;
   height: 100px;
   width: 400px;
-  /* justify-self: center;
-  align-self: center; */
   text-align: center;
 }
 
@@ -86,7 +84,6 @@ body {
   display: flex;
   align-items: end;
   justify-content: end;
-  /* background-color: red; */
 }
 
 .btn {
@@ -99,21 +96,29 @@ body {
 .game-board {
   grid-row: 2 /3;
   display: flex;
+  flex-shrink: inherit;
   flex-direction: column;
   justify-content: center;  
-  height: 100%;
+  height: min(414px, 100%);
   gap: 6px;
 }
 
 .row {
   display: flex;
   gap: 6px;
+  height: 100%
+}
+
+
+.box-container {
+  display: flex;
 }
 
 .box {
   display: flex;
-  width: 64px;
-  height: 64px;
+  flex: 1;
+  min-width: 26px;
+  min-height: 26px;
   border: 2px solid var(--clr-border-dk);
   justify-content: center;
   align-items: center;
@@ -126,9 +131,10 @@ body {
   font-weight: 400;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   align-self: flex-end;
-  margin-bottom: 8px;
+  margin: 12px 0;
 }
 
 .keyboard-row {

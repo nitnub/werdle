@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard';
 import Row from './components/Row';
@@ -17,8 +17,6 @@ let game = [];
 for (let i = 0; i < NUM_OF_ROUNDS; i++) {
   game.push([...round]);
 }
-
-
 
 // Default Key Colors
 
@@ -58,11 +56,10 @@ function App() {
   const [letterIndex, setLetterIndex] = useState(0);
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
-  
+
   // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
-  const [outcome, setOutcome] = useState(0)
-  // console.log('rendering!')
+  const [outcome, setOutcome] = useState(0);
 
   // Fetch word list and set solution to random word.
   useEffect(() => {
@@ -75,42 +72,9 @@ function App() {
     getWord();
   }, []);
 
-  // Set keyboard colors / classes
-  useEffect(() => {
-    // console.log('setting colors')
-    
-    const solutionArray = solution.split('');
-    const updateKeyColors = () => {
-      // If NUM_OF_ROUNDS
-      if (roundOver) {
-        board[roundIndex - 1].map((guess, index) => {
-          if (keyColors[guess] === 'correct') {
-            return;
-          } else if (guess === solutionArray[index]) {
-            setKeyColors((keyColors) => {
-              return { ...keyColors, [guess]: 'correct' };
-            });
-            return;
-          } else if (solution.indexOf(guess) >= 0) {
-            setKeyColors((keyColors) => {
-              return { ...keyColors, [guess]: 'close' };
-            });
-            return;
-          } else
-            setKeyColors((keyColors) => {
-              return { ...keyColors, [guess]: 'incorrect' };
-            });
-          // return;
-        });
-      }
-    };
-    roundIndex < NUM_OF_ROUNDS - 2 && updateKeyColors();
-  // }, [keyColors, board[roundIndex]]);
-  });
 
   // Compare letter in guess with letters in solution to determine gameboard coloring
   const checkLetter = (letter, index, solution, keyColors) => {
-
     const correctLetter = solution.slice(index, index + 1);
     if (correctLetter === letter) {
       const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
@@ -135,81 +99,19 @@ function App() {
   };
 
   const checkGameOver = () => {
-    console.warn('checking game over...')
-    const response = board[roundIndex].join('')
-    console.log(`roundIndex: `, roundIndex)
-
+    console.warn('checking game over...');
+    const response = board[roundIndex].join('');
+    console.log(`roundIndex: `, roundIndex);
 
     if (solution === response) {
       setGameOver(true);
       setOutcome(1);
-    } else if (roundIndex === NUM_OF_ROUNDS -1) {
-      // console.warn('hit else if...')
+    } else if (roundIndex === NUM_OF_ROUNDS - 1) {
+ 
       setGameOver(true);
       setOutcome(2);
     }
-  }
-
-
-  console.log(`roundIndex: `, roundIndex)
-  console.log(`board[roundInde]: `, board[roundIndex])
-  console.log(`round: `, round)
-
-
-
-
-
-
-  
-  // Interpret key events
-  // TODO: add useCallback
-  // const keyEvent = useCallback((letter) =>  {
-  //     // console.log(letter);
-  //     // console.log(gameOver);
-  //     if (gameOver) return;
-  //     switch (letter) {
-  //       case 'Enter': {
-  //         if (letterIndex >= 5) {
-            
-  //           setRoundIndex((roundIndex) =>
-  //             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
-  //           );
-  //           setLetterIndex(() => 0);
-  //           setRoundOver(true);
-            
-  //           checkGameOver()
-  //         }
-  
-  //         break;
-  //       }
-  //       case 'Del':
-  //       case 'Backspace': {
-  //         const newIndex = Math.max(0, letterIndex - 1);
-  //         const boardCopy = [...board];
-  //         boardCopy[roundIndex][letterIndex - 1] = ' ';
-  //         setBoard(boardCopy);
-  //         setLetterIndex(newIndex);
-  //         break;
-  //       }
-  
-  //       default: // Passed testing on https://regex101.com/
-  //         const isSingleAlphaChar = /^[a-zA-Z]$/;
-  //         if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
-  //           setLetterIndex((letterIndex) => letterIndex + 1);
-  //           const boardCopy = [...board];
-  //           boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
-  //           setBoard(boardCopy);
-  //           break;
-  //         }
-  //     }
-   
-  // }, [board, letterIndex, gameOver, checkGameOver, roundIndex])
-
-
-
-
-
-
+  };
 
 
 
@@ -220,15 +122,14 @@ function App() {
     switch (letter) {
       case 'Enter': {
         if (letterIndex >= 5) {
-          console.warn('pressed enter')
+          console.warn('pressed enter');
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
           setLetterIndex(() => 0);
           setRoundOver(true);
-          checkGameOver()
+          checkGameOver();
         }
-
         break;
       }
       case 'Del':
@@ -240,7 +141,6 @@ function App() {
         setLetterIndex(newIndex);
         break;
       }
-
       default: // Passed testing on https://regex101.com/
         const isSingleAlphaChar = /^[a-zA-Z]$/;
         if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
@@ -257,19 +157,54 @@ function App() {
     const physicalKeyEvent = (e) => {
       keyEvent(e.key);
     };
-    window.addEventListener('keydown', physicalKeyEvent);
 
+    window.addEventListener('keydown', physicalKeyEvent);
     return () => window.removeEventListener('keydown', physicalKeyEvent);
   });
+
+
+  
+  // // Set keyboard colors / classes
+  useEffect(() => {
+    const solutionArray = solution.split('');
+    const updateKeyColors = () => {
+      if (roundOver) {
+        board[roundIndex - 1].map((guess, index) => {
+          console.log('guess: ', guess)
+          if (keyColors[guess] === 'correct') {
+          } else if (guess === solutionArray[index]) {
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'correct' };
+            });
+          } else if (solution.indexOf(guess) >= 0) {
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'close' };
+            });
+          } else
+            setKeyColors((keyColors) => {
+              return { ...keyColors, [guess]: 'incorrect' };
+            });
+        });
+      }
+    };
+    roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
+  }, [roundIndex]);
+
+
 
   return (
     <div className="container">
       <Header />
-      <div className="game-container">
-        {outcome  >= 1 && 
-          <GameOver outcome={outcome} setOutcome={setOutcome} solution={solution}/>
-}
-         {outcome < 1 && <div className="game-board">
+      <div  className="game-container">
+        {outcome >= 1 && (
+          <GameOver
+            outcome={outcome}
+            setOutcome={setOutcome}
+            solution={solution}
+          />
+        )}
+        {outcome < 1 && (
+          <div id="game-board" className="game-board">
             {board.map((round, index) => (
               <Row
                 key={index}
@@ -284,9 +219,7 @@ function App() {
               />
             ))}
           </div>
-        
-            }
-        
+        )}
       </div>
       <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
     </div>

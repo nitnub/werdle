@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+
+
+
 const Row = ({
   id,
   round,
@@ -10,7 +13,21 @@ const Row = ({
   checkLetter,
   keyColors,
 }) => {
+
+  const rowHeight = () => document.getElementById('row0')?.clientHeight
+
   const [classes, setClasses] = useState('box');
+  const [boxHeight, setBoxHeight] = useState(rowHeight());
+
+
+  useEffect(() => {
+    const resizeRows = () => {
+      setBoxHeight((boxHeight) => rowHeight());
+    };
+    
+    window.addEventListener('resize', resizeRows);
+    return () => window.removeEventListener('resize', resizeRows);
+  }, [boxHeight]);
 
   useEffect(() => {
     const checkAnswer = () => {
@@ -24,16 +41,31 @@ const Row = ({
       setClasses(checkAnswer());
     }
     setRoundOver(false);
-  }, [id, roundIndex, roundOver, setRoundOver, solution, keyColors, round, checkLetter]);
+  }, [
+    id,
+    roundIndex,
+    roundOver,
+    setRoundOver,
+    solution,
+    keyColors,
+    round,
+    checkLetter,
+  ]);
 
   return (
     <div className="row">
       {round.map((letter, index) => (
-        <div key={index} className={'box ' + classes[index]}>
+        <div 
+          id={`row${index}`} 
+          key={index} 
+          className={'box ' + classes[index]}
+          // Adjust font size to fit box
+          style={{width: rowHeight(), fontSize: `${boxHeight * .75}px`}}
+        >
           {letter}
         </div>
       ))}
     </div>
   );
-}
+};
 export default Row;
