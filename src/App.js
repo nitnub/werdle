@@ -99,9 +99,7 @@ function App() {
   };
 
   const checkGameOver = () => {
-    console.warn('checking game over...');
     const response = board[roundIndex].join('');
-    console.log(`roundIndex: `, roundIndex);
 
     if (solution === response) {
       setGameOver(true);
@@ -116,13 +114,11 @@ function App() {
 
 
   const keyEvent = (letter) => {
-    console.log(letter);
-    console.log(gameOver);
     if (gameOver) return;
     switch (letter) {
       case 'Enter': {
         if (letterIndex >= 5) {
-          console.warn('pressed enter');
+
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
@@ -170,7 +166,6 @@ function App() {
     const updateKeyColors = () => {
       if (roundOver) {
         board[roundIndex - 1].map((guess, index) => {
-          console.log('guess: ', guess)
           if (keyColors[guess] === 'correct') {
           } else if (guess === solutionArray[index]) {
             setKeyColors((keyColors) => {
