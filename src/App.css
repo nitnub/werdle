@@ -176,3 +176,17 @@ body {
    background-color: var(--clr-close);
    border-color: var(--clr-close);
  }
+
+
+ @media(max-width: 768px) {
+  .header-section .title {
+    text-align: left;
+    /* justify-self: flex-start; */
+  }
+  .hamburger {
+    width: 16px
+  }
+   .header-section .hamburger-nav{
+    width: 16px
+  }
+ }
