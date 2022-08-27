@@ -49,13 +49,13 @@ const Row = ({
       );
       return classList;
     };
-
     if (roundOver && id < roundIndex) {
       setClasses(checkAnswer());
     }
     setRoundOver(false);
   });
 
+  
   return (
     <div className="row">
       {round.map((letter, index) => (

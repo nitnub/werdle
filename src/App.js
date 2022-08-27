@@ -121,11 +121,11 @@ function App() {
       }
       case 'Del':
       case 'Backspace': {
-        const newIndex = Math.max(0, letterIndex - 1);
+        const previousLetter = Math.max(0, letterIndex - 1);
         const boardCopy = [...board];
-        boardCopy[roundIndex][letterIndex - 1] = ' ';
+        boardCopy[roundIndex][previousLetter] = ' ';
         setBoard(boardCopy);
-        setLetterIndex(newIndex);
+        setLetterIndex(previousLetter);
         break;
       }
       default: // Passed testing on https://regex101.com/
@@ -140,14 +140,7 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const physicalKeyEvent = (e) => {
-      keyEvent(e.key);
-    };
 
-    window.addEventListener('keydown', physicalKeyEvent);
-    return () => window.removeEventListener('keydown', physicalKeyEvent);
-  });
 
 
   
@@ -156,7 +149,7 @@ function App() {
     const solutionArray = solution.split('');
     const updateKeyColors = () => {
       if (roundOver) {
-        board[roundIndex - 1].map((guess, index) => {
+        board[roundIndex - 1].forEach((guess, index) => {
           if (keyColors[guess] === 'correct') {
           } else if (guess === solutionArray[index]) {
             setKeyColors((keyColors) => {
@@ -170,12 +163,13 @@ function App() {
             setKeyColors((keyColors) => {
               return { ...keyColors, [guess]: 'incorrect' };
             });
+      
         });
       }
     };
     roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-  // }, [roundIndex]);
-  });
+  }, [roundIndex]);
+
 
 
 
