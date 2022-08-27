@@ -7,6 +7,7 @@ const Keyboard = ({ keyColors, keyEvent }) => {
     ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Del'],
   ];
 
+  
   const clickHandler = (e) => {
     console.log(e);
     keyEvent(e.target.innerText);

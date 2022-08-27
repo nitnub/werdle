@@ -65,7 +65,6 @@ function App() {
   const rowHeight = () => document.getElementById('row0')?.clientHeight
   const [boxHeight, setBoxHeight] = useState(rowHeight());
 
-console.log('rowHeight:', rowHeight())
   useEffect(() => {
     const resizeRows = () => {
       setBoxHeight((boxHeight) => rowHeight());
@@ -76,7 +75,6 @@ console.log('rowHeight:', rowHeight())
   // }, [boxHeight, letterIndex, gameOver]);
   });
 
-console.log('parent boxHeight: ', boxHeight)
 
   // Fetch word list and set solution to random word.
   useEffect(() => {
@@ -90,30 +88,7 @@ console.log('parent boxHeight: ', boxHeight)
   }, []);
 
 
-  // Compare letter in guess with letters in solution to determine gameboard coloring
-  const checkLetter = (letter, index, solution, keyColors) => {
-    const correctLetter = solution.slice(index, index + 1);
-    if (correctLetter === letter) {
-      const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
-      setKeyColors(keyColorsCopy);
-
-      return 'correct';
-    } else if (solution.split('').indexOf(letter) >= 0) {
-      if (keyColors[letter] === 'unselected') {
-        const keyColorsCopy = { ...keyColors, [letter]: 'close' };
-        setKeyColors(keyColorsCopy);
-      }
-
-      return 'close';
-    } else {
-      if (solution.split('').indexOf(letter) === -1) {
-        const keyColorsCopy = { ...keyColors, [letter]: 'incorrect' };
-        setKeyColors(keyColorsCopy);
-      }
-
-      return 'incorrect';
-    }
-  };
+ 
 
   const checkGameOver = () => {
     const response = board[roundIndex].join('');
@@ -122,7 +97,6 @@ console.log('parent boxHeight: ', boxHeight)
       setGameOver(true);
       setOutcome(1);
     } else if (roundIndex === NUM_OF_ROUNDS - 1) {
- 
       setGameOver(true);
       setOutcome(2);
     }
@@ -200,7 +174,8 @@ console.log('parent boxHeight: ', boxHeight)
       }
     };
     roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-  }, [roundIndex]);
+  // }, [roundIndex]);
+  });
 
 
 
@@ -225,8 +200,9 @@ console.log('parent boxHeight: ', boxHeight)
                 roundIndex={roundIndex}
                 roundOver={roundOver}
                 setRoundOver={setRoundOver}
-                checkLetter={checkLetter}
+                // checkLetter={checkLetter}
                 keyColors={keyColors}
+                setKeyColors={setKeyColors}
                 solution={solution}
                 boxHeight={boxHeight}
               />

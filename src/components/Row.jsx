@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+
 const Row = ({
   id,
   round,
@@ -7,12 +8,39 @@ const Row = ({
   roundIndex,
   roundOver,
   setRoundOver,
-  checkLetter,
+  // checkLetter,
   keyColors,
   boxHeight,
+  setKeyColors
 }) => {
 
   const [classes, setClasses] = useState('box');
+
+   // Compare letter in guess with letters in solution to determine gameboard coloring
+ const checkLetter = (letter, index, solution, keyColors) => {
+  const correctLetter = solution.slice(index, index + 1);
+  if (correctLetter === letter) {
+    const keyColorsCopy = { ...keyColors, [letter]: 'correct' };
+    setKeyColors(keyColorsCopy);
+
+    return 'correct';
+  } else if (solution.split('').indexOf(letter) >= 0) {
+    if (keyColors[letter] === 'unselected') {
+      const keyColorsCopy = { ...keyColors, [letter]: 'close' };
+      setKeyColors(keyColorsCopy);
+    }
+
+    return 'close';
+  } else {
+    if (solution.split('').indexOf(letter) === -1) {
+      const keyColorsCopy = { ...keyColors, [letter]: 'incorrect' };
+      setKeyColors(keyColorsCopy);
+    }
+
+    return 'incorrect';
+  }
+};
+
 
   useEffect(() => {
     const checkAnswer = () => {
