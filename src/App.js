@@ -61,6 +61,23 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
 
+  // Set box sizes
+  const rowHeight = () => document.getElementById('row0')?.clientHeight
+  const [boxHeight, setBoxHeight] = useState(rowHeight());
+
+console.log('rowHeight:', rowHeight())
+  useEffect(() => {
+    const resizeRows = () => {
+      setBoxHeight((boxHeight) => rowHeight());
+    };
+    resizeRows()
+    window.addEventListener('resize', resizeRows);
+    return () => window.removeEventListener('resize', resizeRows);
+  // }, [boxHeight, letterIndex, gameOver]);
+  });
+
+console.log('parent boxHeight: ', boxHeight)
+
   // Fetch word list and set solution to random word.
   useEffect(() => {
     const getWord = async () => {
@@ -211,7 +228,7 @@ function App() {
                 checkLetter={checkLetter}
                 keyColors={keyColors}
                 solution={solution}
-                letterIndex={letterIndex}
+                boxHeight={boxHeight}
               />
             ))}
           </div>
