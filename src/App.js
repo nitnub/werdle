@@ -211,6 +211,7 @@ function App() {
                 checkLetter={checkLetter}
                 keyColors={keyColors}
                 solution={solution}
+                letterIndex={letterIndex}
               />
             ))}
           </div>

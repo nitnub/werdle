@@ -12,13 +12,14 @@
   --clr-correct: rgb(63, 150, 52);
   --clr-incorrect: rgb(66, 65, 65);
   --clr-close: rgb(177, 179, 36);
+  --clr-white: white;
 }
 
 body {
   height: 100vh;
   display: flex;
   background-color: var(--clr-bkgrnd);
-  color: white;
+  color: var(--clr-white);
   font-size: 2.25em;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
@@ -56,8 +57,14 @@ body {
 .nav {
   display: flex;
   flex-direction: row;
-  justify-content:space-around;
-  padding: 0 10px
+  justify-content:flex-end;
+  padding: 0 16px
+}
+
+.contact-link {
+  height: .75em;
+  fill: var(--clr-white);
+  padding-right: 12px;
 }
 
 .game-container {
@@ -89,7 +96,7 @@ body {
 .btn {
   border: none;
   background-color: var(--clr-bkgrnd);
-  color: white;
+  color: var(--clr-white);
   font-size: .75em;
 }
 
@@ -108,7 +115,6 @@ body {
   gap: 6px;
   height: 100%
 }
-
 
 .box-container {
   display: flex;
@@ -161,7 +167,6 @@ body {
   padding: 0 36px;
 }
 
-
 .incorrect {
   background-color: var(--clr-incorrect);
   border-color: var(--clr-incorrect);
@@ -177,16 +182,10 @@ body {
    border-color: var(--clr-close);
  }
 
-
  @media(max-width: 768px) {
   .header-section .title {
-    text-align: left;
-    /* justify-self: flex-start; */
-  }
-  .hamburger {
-    width: 16px
-  }
-   .header-section .hamburger-nav{
-    width: 16px
+    position: absolute;
+    top: 10px;
+    left: 16px;
   }
  }

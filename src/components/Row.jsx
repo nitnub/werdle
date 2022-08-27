@@ -12,6 +12,7 @@ const Row = ({
   setRoundOver,
   checkLetter,
   keyColors,
+  letterIndex,
 }) => {
 
   const rowHeight = () => document.getElementById('row0')?.clientHeight
@@ -27,7 +28,7 @@ const Row = ({
     
     window.addEventListener('resize', resizeRows);
     return () => window.removeEventListener('resize', resizeRows);
-  }, [boxHeight]);
+  }, [boxHeight, letterIndex]);
 
   useEffect(() => {
     const checkAnswer = () => {
