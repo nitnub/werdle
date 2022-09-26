@@ -1,6 +1,4 @@
 
-// TODO: Create Box Component
-
 
 const Box = ({ id, className, style, letter, boxHeight }) => {
 

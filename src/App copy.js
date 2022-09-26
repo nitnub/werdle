@@ -68,7 +68,7 @@ function App() {
   const [letterIndex, setLetterIndex] = useState(0);
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
-  const [globalIndex, setGlobalIndex] = useState(0);
+
   // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
@@ -79,17 +79,10 @@ function App() {
 
 
 
-  const getLetterIndex = () => {
+  const getRoundIndex = () => {
     return globalIndex % WORD_LENGTH;
   }
 
-  const getRoundIndex = () => {
-    return Math.floor(globalIndex / WORD_LENGTH);
-  }
-
-  // const getRoundIndex = (globalIndex) => {
-  //   return globalIndex % WORD_LENGTH;
-  // }
 
 
 
@@ -121,13 +114,11 @@ function App() {
 
   const checkGameOver = () => {
     const response = board[roundIndex].join('');
-    const response2 = board[getRoundIndex()].join(''); // roundtest
 
     if (solution === response) {
       setGameOver(true);
       setOutcome(1);
-    } else if (roundIndex === NUM_OF_ROUNDS - 1) { 
-    // } else if (getRoundIndex() === NUM_OF_ROUNDS - 1) {  // roundtest
+    } else if (roundIndex === NUM_OF_ROUNDS - 1) {
       setGameOver(true);
       setOutcome(2);
     }
@@ -137,11 +128,10 @@ function App() {
     if (gameOver) return;
     switch (letter) {
       case 'Enter': {
-        if (letterIndex >= 5) { // roundtest
+        if (letterIndex >= 5) {
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
-          setGlobalIndex(() => globalIndex + 1)
           setLetterIndex(() => 0);
           setRoundOver(true);
           checkGameOver();
@@ -151,24 +141,18 @@ function App() {
       case 'Del':
       case 'Backspace': {
         const previousLetter = Math.max(0, letterIndex - 1);
-        // const previousLetter = Math.max(0, getLetterIndex() - 1); // roundtest
         const boardCopy = [...board];
         boardCopy[roundIndex][previousLetter] = ' ';
-        // boardCopy[getRoundIndex()][previousLetter] = ' ';
         setBoard(boardCopy);
-        setLetterIndex(previousLetter); 
-        setGlobalIndex(() => previousLetter); // roundtest
+        setLetterIndex(previousLetter);
         break;
       }
       default: // Passed testing on https://regex101.com/
         const isSingleAlphaChar = /^[a-zA-Z]$/;
         if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
-        // if (getLetterIndex() < 5 && isSingleAlphaChar.test(letter)) { // roundtest
           setLetterIndex((letterIndex) => letterIndex + 1);
-          // setGlobalIndex(() => globalIndex + 1); // roundtest
           const boardCopy = [...board];
           boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
-          // boardCopy[getRoundIndex()][getLetterIndex()] = letter.toUpperCase(); // roundtest
           setBoard(boardCopy);
           break;
         }
@@ -194,7 +178,6 @@ function App() {
     const updateKeyColors = () => {
       if (roundOver) {
         board[roundIndex - 1].forEach((guess, index) => {
-        // board[getRoundIndex() - 1].forEach((guess, index) => { // roundtest
           // appproach 1
           // if (keyColors[guess] === 'correct') return;
 
@@ -256,7 +239,6 @@ function App() {
                 id={index}
                 round={round}
                 roundIndex={roundIndex}
-                globalIndex={globalIndex}
                 roundOver={roundOver}
                 setRoundOver={setRoundOver}
                 // checkLetter={checkLetter}
