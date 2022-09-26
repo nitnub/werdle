@@ -18,14 +18,11 @@ for (let i = 0; i < NUM_OF_ROUNDS; i++) {
   game.push([...round]);
 }
 
-
-
 // Default key colors
 const defaultKeyColors = {};
 [...Array(26)]
   .map((elem, index) => String.fromCharCode(index + 65))
   .forEach((letter) => (defaultKeyColors[letter] = 'unselected'));
-
 
 // const defaultKeyColors = {
 //   Q: 'unselected',
@@ -56,11 +53,6 @@ const defaultKeyColors = {};
 //   M: 'unselected',
 // };
 
-
-
-
-
-
 function App() {
   const [solution, setSolution] = useState('');
   const [board, setBoard] = useState(game);
@@ -77,26 +69,22 @@ function App() {
   const rowHeight = () => document.getElementById('row0')?.clientHeight;
   const [boxHeight, setBoxHeight] = useState(rowHeight());
 
-
-
   const getLetterIndex = () => {
     return globalIndex % WORD_LENGTH;
-  }
+  };
 
   const getRoundIndex = () => {
     return Math.floor(globalIndex / WORD_LENGTH);
-  }
+  };
 
-  // const getRoundIndex = (globalIndex) => {
-  //   return globalIndex % WORD_LENGTH;
-  // }
-
-
-
-
-
-
-
+  const sameRound = () => {
+    console.log('globalIndex', globalIndex)
+    return (
+      
+      getRoundIndex() === Math.floor((globalIndex - 1) / WORD_LENGTH) ||
+      globalIndex === 0
+    );
+  };
 
   useEffect(() => {
     const resizeRows = () => {
@@ -120,14 +108,15 @@ function App() {
   }, []);
 
   const checkGameOver = () => {
-    const response = board[roundIndex].join('');
-    const response2 = board[getRoundIndex()].join(''); // roundtest
+    // const response = board[roundIndex].join('');
+    const response = board[getRoundIndex()].join(''); // roundtest
 
     if (solution === response) {
       setGameOver(true);
       setOutcome(1);
-    } else if (roundIndex === NUM_OF_ROUNDS - 1) { 
-    // } else if (getRoundIndex() === NUM_OF_ROUNDS - 1) {  // roundtest
+      // } else if (roundIndex === NUM_OF_ROUNDS - 1) {
+    } else if (getRoundIndex() === NUM_OF_ROUNDS - 1) {
+      // roundtest
       setGameOver(true);
       setOutcome(2);
     }
@@ -137,11 +126,14 @@ function App() {
     if (gameOver) return;
     switch (letter) {
       case 'Enter': {
-        if (letterIndex >= 5) { // roundtest
+        // if (letterIndex >= 5) {
+        // if (getLetterIndex() >= 5) {
+        if (!sameRound()) {
+          // roundtest
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
-          setGlobalIndex(() => globalIndex + 1)
+          setGlobalIndex(() => globalIndex + 1);
           setLetterIndex(() => 0);
           setRoundOver(true);
           checkGameOver();
@@ -150,25 +142,29 @@ function App() {
       }
       case 'Del':
       case 'Backspace': {
-        const previousLetter = Math.max(0, letterIndex - 1);
-        // const previousLetter = Math.max(0, getLetterIndex() - 1); // roundtest
+        // const previousLetter = Math.max(0, letterIndex - 1);
+        const previousLetter = Math.max(0, getLetterIndex() - 1); // roundtest
         const boardCopy = [...board];
-        boardCopy[roundIndex][previousLetter] = ' ';
-        // boardCopy[getRoundIndex()][previousLetter] = ' ';
+        // boardCopy[roundIndex][previousLetter] = ' ';
+        boardCopy[getRoundIndex()][previousLetter] = ' ';
         setBoard(boardCopy);
-        setLetterIndex(previousLetter); 
+        // setLetterIndex(previousLetter);
         setGlobalIndex(() => previousLetter); // roundtest
         break;
       }
       default: // Passed testing on https://regex101.com/
         const isSingleAlphaChar = /^[a-zA-Z]$/;
-        if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
+        // if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
+
         // if (getLetterIndex() < 5 && isSingleAlphaChar.test(letter)) { // roundtest
-          setLetterIndex((letterIndex) => letterIndex + 1);
-          // setGlobalIndex(() => globalIndex + 1); // roundtest
+        if (sameRound() && isSingleAlphaChar.test(letter)) {
+          // roundtest
+          console.log('lindex', getLetterIndex());
+          // setLetterIndex((letterIndex) => letterIndex + 1);
+          setGlobalIndex(() => globalIndex + 1); // roundtest
           const boardCopy = [...board];
-          boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
-          // boardCopy[getRoundIndex()][getLetterIndex()] = letter.toUpperCase(); // roundtest
+          // boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
+          boardCopy[getRoundIndex()][getLetterIndex()] = letter.toUpperCase(); // roundtest
           setBoard(boardCopy);
           break;
         }
@@ -193,8 +189,9 @@ function App() {
     const solutionArray = solution.split('');
     const updateKeyColors = () => {
       if (roundOver) {
-        board[roundIndex - 1].forEach((guess, index) => {
-        // board[getRoundIndex() - 1].forEach((guess, index) => { // roundtest
+        // board[roundIndex - 1].forEach((guess, index) => {
+        board[getRoundIndex() - 1].forEach((guess, index) => {
+          // roundtest
           // appproach 1
           // if (keyColors[guess] === 'correct') return;
 
@@ -216,7 +213,7 @@ function App() {
           setKeyColors((keyColors) => {
             return { ...keyColors, ...newEntry };
           });
-// 
+          //
           // approach 3
           // if (keyColors[guess] === 'correct') {
           // } else if (guess === solutionArray[index]) {
@@ -234,8 +231,10 @@ function App() {
         });
       }
     };
-    roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-  }, [roundIndex]);
+    // roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
+    getRoundIndex() <= NUM_OF_ROUNDS && updateKeyColors(); // roundtest
+    // }, [roundIndex]);
+  }, [globalIndex]);
 
   return (
     <div className="container">
@@ -255,7 +254,8 @@ function App() {
                 key={index}
                 id={index}
                 round={round}
-                roundIndex={roundIndex}
+                // roundIndex={roundIndex}
+                roundIndex={getRoundIndex()}
                 globalIndex={globalIndex}
                 roundOver={roundOver}
                 setRoundOver={setRoundOver}
