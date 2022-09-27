@@ -12,6 +12,7 @@
 /build
 
 # misc
+.local-resources
 .DS_Store
 /screenshots
 .env.local

@@ -6,8 +6,8 @@ import Row from './components/Row';
 import GameOver from './components/GameOver';
 
 // Word resource link
-const WORD_LIST_URL = './res/words.json';
-// const WORD_LIST_URL = './res/words.test.json';
+const WORD_LIST_URL = '/res/words.json';
+// const WORD_LIST_URL = '/res/words.test.json';
 const WORD_LENGTH = 5;
 const NUM_OF_ROUNDS = 6;
 
@@ -18,40 +18,11 @@ for (let i = 0; i < NUM_OF_ROUNDS; i++) {
   game.push([...round]);
 }
 
-// Default key colors
+// Create starter object with Default key colors
 const defaultKeyColors = {};
 [...Array(26)]
   .map((elem, index) => String.fromCharCode(index + 65))
   .forEach((letter) => (defaultKeyColors[letter] = 'unselected'));
-
-// const defaultKeyColors = {
-//   Q: 'unselected',
-//   W: 'unselected',
-//   E: 'unselected',
-//   R: 'unselected',
-//   T: 'unselected',
-//   Y: 'unselected',
-//   U: 'unselected',
-//   I: 'unselected',
-//   O: 'unselected',
-//   P: 'unselected',
-//   A: 'unselected',
-//   S: 'unselected',
-//   D: 'unselected',
-//   F: 'unselected',
-//   G: 'unselected',
-//   H: 'unselected',
-//   J: 'unselected',
-//   K: 'unselected',
-//   L: 'unselected',
-//   Z: 'unselected',
-//   X: 'unselected',
-//   C: 'unselected',
-//   V: 'unselected',
-//   B: 'unselected',
-//   N: 'unselected',
-//   M: 'unselected',
-// };
 
 function App() {
   const [solution, setSolution] = useState('');
@@ -61,38 +32,30 @@ function App() {
   const [roundOver, setRoundOver] = useState(false);
   const [keyColors, setKeyColors] = useState(defaultKeyColors);
   const [globalIndex, setGlobalIndex] = useState(0);
+
   // TODO: Set up game over screen
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
 
   // Set box sizes
-  const rowHeight = () => document.getElementById('row0')?.clientHeight;
+  const rowHeight = () =>
+    document.getElementById('row0')?.clientHeight;
   const [boxHeight, setBoxHeight] = useState(rowHeight());
 
-  const getLetterIndex = () => {
-    return globalIndex % WORD_LENGTH;
-  };
-
   const getRoundIndex = () => {
-    return Math.floor(globalIndex / WORD_LENGTH);
-  };
-
-  const sameRound = () => {
-    console.log('globalIndex', globalIndex)
-    return (
-      
-      getRoundIndex() === Math.floor((globalIndex - 1) / WORD_LENGTH) ||
-      globalIndex === 0
-    );
+    return globalIndex % WORD_LENGTH;
   };
 
   useEffect(() => {
     const resizeRows = () => {
       setBoxHeight(() => rowHeight());
     };
-    resizeRows();
+    if (!gameOver) {
+      resizeRows();
+    }
+    window.addEventListener('load', resizeRows);
     window.addEventListener('resize', resizeRows);
-    return () => window.removeEventListener('resize', resizeRows);
+    return (_) => window.removeEventListener('resize', resizeRows);
     // }, [boxHeight, letterIndex, gameOver]);
   });
 
@@ -108,15 +71,12 @@ function App() {
   }, []);
 
   const checkGameOver = () => {
-    // const response = board[roundIndex].join('');
-    const response = board[getRoundIndex()].join(''); // roundtest
+    const response = board[roundIndex].join('');
 
     if (solution === response) {
       setGameOver(true);
       setOutcome(1);
-      // } else if (roundIndex === NUM_OF_ROUNDS - 1) {
-    } else if (getRoundIndex() === NUM_OF_ROUNDS - 1) {
-      // roundtest
+    } else if (roundIndex === NUM_OF_ROUNDS - 1) {
       setGameOver(true);
       setOutcome(2);
     }
@@ -126,14 +86,10 @@ function App() {
     if (gameOver) return;
     switch (letter) {
       case 'Enter': {
-        // if (letterIndex >= 5) {
-        // if (getLetterIndex() >= 5) {
-        if (!sameRound()) {
-          // roundtest
+        if (letterIndex >= 5) {
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
-          setGlobalIndex(() => globalIndex + 1);
           setLetterIndex(() => 0);
           setRoundOver(true);
           checkGameOver();
@@ -142,99 +98,53 @@ function App() {
       }
       case 'Del':
       case 'Backspace': {
-        // const previousLetter = Math.max(0, letterIndex - 1);
-        const previousLetter = Math.max(0, getLetterIndex() - 1); // roundtest
+        const previousLetter = Math.max(0, letterIndex - 1);
         const boardCopy = [...board];
-        // boardCopy[roundIndex][previousLetter] = ' ';
-        boardCopy[getRoundIndex()][previousLetter] = ' ';
+        boardCopy[roundIndex][previousLetter] = ' ';
         setBoard(boardCopy);
-        // setLetterIndex(previousLetter);
-        setGlobalIndex(() => previousLetter); // roundtest
+        setLetterIndex(previousLetter);
         break;
       }
       default: // Passed testing on https://regex101.com/
         const isSingleAlphaChar = /^[a-zA-Z]$/;
-        // if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
-
-        // if (getLetterIndex() < 5 && isSingleAlphaChar.test(letter)) { // roundtest
-        if (sameRound() && isSingleAlphaChar.test(letter)) {
-          // roundtest
-          console.log('lindex', getLetterIndex());
-          // setLetterIndex((letterIndex) => letterIndex + 1);
-          setGlobalIndex(() => globalIndex + 1); // roundtest
+        if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
+          setLetterIndex((letterIndex) => letterIndex + 1);
           const boardCopy = [...board];
-          // boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
-          boardCopy[getRoundIndex()][getLetterIndex()] = letter.toUpperCase(); // roundtest
+          boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
           setBoard(boardCopy);
           break;
         }
     }
   };
 
-  // // Set keyboard colors / classes
-
-  const guessIsCorrect = (guess) => {
-    return { ...keyColors, [guess]: 'correct' };
-  };
-
-  const guessIsClose = (guess) => {
-    return { ...keyColors, [guess]: 'close' };
-  };
-
-  const guessIsIncorrect = (guess) => {
-    return { ...keyColors, [guess]: 'incorrect' };
-  };
+  // Set keyboard colors / classes
 
   useEffect(() => {
     const solutionArray = solution.split('');
+
+    let tempKeys = {};
     const updateKeyColors = () => {
       if (roundOver) {
-        // board[roundIndex - 1].forEach((guess, index) => {
-        board[getRoundIndex() - 1].forEach((guess, index) => {
-          // roundtest
-          // appproach 1
-          // if (keyColors[guess] === 'correct') return;
-
-          // if (guess === solutionArray[index]) {
-          //   setKeyColors(() => guessIsCorrect(guess));
-          // } else if (solution.indexOf(guess) >= 0) {
-          //   setKeyColors(() => guessIsClose(guess));
-          // } else setKeyColors(() => guessIsIncorrect(guess));
-
-          // approach 2
-          let newEntry;
-          if (keyColors[guess] === 'correct') return;
-          else if (guess === solutionArray[index]) {
-            newEntry = { [guess]: 'correct' };
+        board[roundIndex - 1].forEach((guess, index) => {
+          if (tempKeys[guess] === 'correct') return;
+          if (guess === solutionArray[index]) {
+            tempKeys = { ...tempKeys, [guess]: 'correct' };
           } else if (solution.indexOf(guess) >= 0) {
-            newEntry = { [guess]: 'close' };
-          } else newEntry = { [guess]: 'incorrect' };
+            tempKeys = { ...tempKeys, [guess]: 'close' };
+          } else {
+            tempKeys = { ...tempKeys, [guess]: 'incorrect' };
+          }
 
-          setKeyColors((keyColors) => {
-            return { ...keyColors, ...newEntry };
-          });
-          //
-          // approach 3
-          // if (keyColors[guess] === 'correct') {
-          // } else if (guess === solutionArray[index]) {
-          //   setKeyColors((keyColors) => {
-          //     return { ...keyColors, [guess]: 'correct' };
-          //   });
-          // } else if (solution.indexOf(guess) >= 0) {
-          //   setKeyColors((keyColors) => {
-          //     return { ...keyColors, [guess]: 'close' };
-          //   });
-          // } else
-          //   setKeyColors((keyColors) => {
-          //     return { ...keyColors, [guess]: 'incorrect' };
-          //   });
+          setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
         });
       }
     };
+
+    if (!gameOver && roundIndex <= NUM_OF_ROUNDS) {
+      updateKeyColors();
+    }
     // roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-    getRoundIndex() <= NUM_OF_ROUNDS && updateKeyColors(); // roundtest
-    // }, [roundIndex]);
-  }, [globalIndex]);
+  });
 
   return (
     <div className="container">
@@ -254,9 +164,7 @@ function App() {
                 key={index}
                 id={index}
                 round={round}
-                // roundIndex={roundIndex}
-                roundIndex={getRoundIndex()}
-                globalIndex={globalIndex}
+                roundIndex={roundIndex}
                 roundOver={roundOver}
                 setRoundOver={setRoundOver}
                 // checkLetter={checkLetter}
