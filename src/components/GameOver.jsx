@@ -1,14 +1,37 @@
-const GameOver = ({ outcome, setOutcome, solution }) => {
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
+const GameOver = (props) => {
+  const { outcome, setOutcome, solution, onHide } = props;
+  console.log('game over Modal');
   return (
-    <div className="game-over-container">
-      <div className="button-container">
-        <button className="btn game-over" onClick={() => setOutcome(0)}>X</button>
-      </div>
-      {outcome === 1 ? <div>{'You won!'}</div> : <div>{'Almost!'}</div>}
-      <div>
-        {'The word was'} <i>{solution.toLowerCase()}</i>
-      </div>
-    </div>
+    <>
+     
+      <Modal
+      {...props}
+        size="lg"
+        // aria-labelledby=""
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="game-over-modal">
+            {`outcome code: ${outcome}`}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>{solution}</h4>
+          <p>{solution}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className={'btn-dark'} onClick={() => {
+            onHide();
+            setOutcome(0)}
+            }>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

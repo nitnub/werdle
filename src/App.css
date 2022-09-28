@@ -79,11 +79,9 @@ body {
 }
 
 .game-over-container {
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  width: 400px;
-  text-align: center;
+
+  /* background-color: red; */
+
 }
 
 .game-over-container
