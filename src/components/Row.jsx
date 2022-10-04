@@ -36,7 +36,7 @@ const Row = ({
       return classList;
     };
     if (roundOver && id < roundIndex) {
-      console.log(checkAnswer());
+      // console.log(checkAnswer());
       setClasses(checkAnswer());
     }
     setRoundOver(false);

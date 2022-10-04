@@ -12,11 +12,15 @@ const WORD_LENGTH = 5;
 const NUM_OF_ROUNDS = 6;
 
 // Create board using defined number of letters per round and rounds per game
-let round = Array(WORD_LENGTH).fill(' ');
-let game = [];
-for (let i = 0; i < NUM_OF_ROUNDS; i++) {
-  game.push([...round]);
-}
+const createBoard = (WORD_LENGTH, NUM_OF_ROUNDS) => {
+  let round = Array(WORD_LENGTH).fill(' ');
+  let game = [];
+  for (let i = 0; i < NUM_OF_ROUNDS; i++) {
+    game.push([...round]);
+  }
+  return game;
+};
+let game = createBoard(WORD_LENGTH, NUM_OF_ROUNDS);
 
 // Create starter object with Default key colors
 const defaultKeyColors = {};
@@ -47,10 +51,18 @@ function App() {
     return globalIndex % WORD_LENGTH;
   };
 
+  const resetGame = () => {
+    setBoard(createBoard(WORD_LENGTH, NUM_OF_ROUNDS));
+    setRoundIndex(0);
+    setLetterIndex(0);
+    setRoundOver(false);
+    setKeyColors(defaultKeyColors);
+    setOutcome(() => 0);
+    setNewSolution();
+  };
+
   useEffect(() => {
     const resizeRows = () => {
-      console.log(rowHeight());
-      // setBoxHeight(() =>Math.min(rowHeight(), 64));
       setBoxHeight(() => rowHeight());
     };
     resizeRows();
@@ -60,14 +72,16 @@ function App() {
   });
 
   // Fetch word list and set solution to random word.
+
+  async function setNewSolution(url) {
+    const wordList = await fetch(url);
+    const json = await wordList.json();
+    const word = json[Math.floor(Math.random() * json.length)];
+    setSolution(word);
+  }
+
   useEffect(() => {
-    const getWord = async () => {
-      const wordList = await fetch(WORD_LIST_URL);
-      const json = await wordList.json();
-      const word = json[Math.floor(Math.random() * json.length)];
-      setSolution(word);
-    };
-    getWord();
+    setNewSolution(WORD_LIST_URL);
   }, []);
 
   const checkGameOver = () => {
@@ -89,12 +103,16 @@ function App() {
     switch (letter) {
       case 'Enter': {
         if (letterIndex >= 5) {
+          updateKeyColors();
           setRoundIndex((roundIndex) =>
             Math.min(NUM_OF_ROUNDS, roundIndex + 1)
           );
+
           setLetterIndex(() => 0);
           setRoundOver(true);
           checkGameOver();
+
+          // roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
         }
         break;
       }
@@ -121,42 +139,59 @@ function App() {
 
   // // Set keyboard colors / classes
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const solutionArray = solution.split('');
+
+  //   let tempKeys = {};
+  //   const updateKeyColors = () => {
+  //     if (roundOver) {
+  //       board[roundIndex - 1].forEach((guess, index) => {
+  //         // appproach 1
+
+  //         if (tempKeys[guess] === 'correct') return;
+  //         if (guess === solutionArray[index]) {
+  //           tempKeys = { ...tempKeys, [guess]: 'correct' };
+  //         } else if (solution.indexOf(guess) >= 0) {
+  //           tempKeys = { ...tempKeys, [guess]: 'close' };
+  //         } else {
+  //           tempKeys = { ...tempKeys, [guess]: 'incorrect' };
+  //         }
+
+  //         setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
+
+  //       });
+  //     }
+  //   };
+  //   roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
+  //   // }, [roundIndex, keyColors]);
+  // });
+
+  const updateKeyColors = () => {
     const solutionArray = solution.split('');
-
     let tempKeys = {};
-    const updateKeyColors = () => {
-      if (roundOver) {
-        board[roundIndex - 1].forEach((guess, index) => {
-          // appproach 1
+    board[roundIndex].forEach((guess, index) => {
+      if (tempKeys[guess] === 'correct') return;
 
-          if (tempKeys[guess] === 'correct') return;
-          if (guess === solutionArray[index]) {
-            tempKeys = { ...tempKeys, [guess]: 'correct' };
-          } else if (solution.indexOf(guess) >= 0) {
-            tempKeys = { ...tempKeys, [guess]: 'close' };
-          } else {
-            tempKeys = { ...tempKeys, [guess]: 'incorrect' };
-          }
-
-          setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
-
-        });
+      if (guess === solutionArray[index]) {
+        tempKeys = { ...tempKeys, [guess]: 'correct' };
+      } else if (solution.indexOf(guess) >= 0) {
+        tempKeys = { ...tempKeys, [guess]: 'close' };
+      } else {
+        tempKeys = { ...tempKeys, [guess]: 'incorrect' };
       }
-    };
-    roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-    // }, [roundIndex, keyColors]);
-  });
+      setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
+    });
+  };
 
   return (
     <div className="container">
-      <Header />
+      <Header resetGame={resetGame} />
 
       <GameOver
         show={modalVisible}
         onHide={() => setModalVisible(false)}
         outcome={outcome}
-        setOutcome={setOutcome}
+        // setoutcome={setOutcome}
         solution={solution}
       />
 

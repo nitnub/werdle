@@ -23,23 +23,25 @@ const Keyboard = ({ keyColors, keyEvent }) => {
 
   return (
     <div className="keyboard-container">
-      {keyLayout.map((row) => {
-        return (
-          <div key={row[0]} className="keyboard-row">
-            {row.map((key) => (
-              <div
-                key={key}
-                className={`keyboard-key ${key.toLowerCase()} ${
-                  keyColors[key]
-                }`}
-                onClick={clickHandler}
-              >
-                {key}
-              </div>
-            ))}{' '}
-          </div>
-        );
-      })}
+      <div className="keyboard">
+        {keyLayout.map((row) => {
+          return (
+            <div key={row[0]} className="keyboard-row">
+              {row.map((key) => (
+                <div
+                  key={key}
+                  className={`keyboard-key ${key.toLowerCase()} ${
+                    keyColors[key]
+                  }`}
+                  onClick={clickHandler}
+                >
+                  {key}
+                </div>
+              ))}{' '}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
