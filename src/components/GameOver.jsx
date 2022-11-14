@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 
 const GameOver = (props) => {
   const { outcome, solution, onHide } = props;
-  console.log('solution', solution)
   return (
     <>
       <Modal {...props} size="lg" centered>
@@ -11,7 +10,6 @@ const GameOver = (props) => {
           <Modal.Title>{outcome === 1 ? 'You won!' : 'Almost!'}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-card">
-          {/* <h4>{'The word was'} <i>{solution.toLowerCase()}</i></h4> */}
           <p>
             {'The word was...'} <i>{solution?.toUpperCase()}</i>
           </p>
@@ -21,7 +19,6 @@ const GameOver = (props) => {
             className={'btn-dark'}
             onClick={() => {
               onHide();
-              // setoutcome(0)
             }}
           >
             Close

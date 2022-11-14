@@ -8,12 +8,51 @@ const Row = ({
   roundOver,
   setRoundOver,
   keyColors,
-  boxHeight,
-  setKeyColors,
-}) => {
-  const [classes, setClasses] = useState('box');
 
-  const getColorClass = (letter, index, solution, keyColors) => {
+}) => {
+
+
+
+
+
+  // Set box sizes
+  const rowHeight = () => document.getElementById('box0')?.clientHeight;
+  const boardHeight = () => document.getElementById('game-board')?.clientHeight;
+  const [boxHeight, setBoxHeight] = useState(rowHeight());
+
+
+  useEffect(() => {
+    const resizeRows = () => {
+      setBoxHeight(() => rowHeight());
+    };
+    resizeRows();
+    window.addEventListener('resize', resizeRows);
+    return () => window.removeEventListener('resize', resizeRows);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [classes, setClasses] = useState('');
+
+  const getColorClass = (letter, index, solution) => {
     const correctLetter = solution.slice(index, index + 1);
     const correctLetterIndex = solution.split('').indexOf(letter);
 
@@ -36,7 +75,7 @@ const Row = ({
       return classList;
     };
     if (roundOver && id < roundIndex) {
-      // console.log(checkAnswer());
+  
       setClasses(checkAnswer());
     }
     setRoundOver(false);
@@ -46,7 +85,7 @@ const Row = ({
     <div className="row">
       {round.map((letter, index) => (
         <div
-          id={`row${index}`}
+          id={`box${index}`}
           key={index}
           className={'box ' + classes[index]}
           style={{ width: boxHeight, fontSize: `${boxHeight * 0.6}px` }} // Adjust font size to fit box

@@ -42,14 +42,23 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
 
-  // Set box sizes
-  const rowHeight = () => document.getElementById('row0')?.clientHeight;
-  const boardHeight = () => document.getElementById('game-board')?.clientHeight;
-  const [boxHeight, setBoxHeight] = useState(rowHeight());
+
 
   const getRoundIndex = () => {
     return globalIndex % WORD_LENGTH;
   };
+
+
+  const removeClasses = (str, classArray) => {
+    const elementArray = document.getElementsByClassName(str);
+    for (let box of elementArray) {    
+        box.classList.remove(...classArray)
+    }
+  }
+  const resetBoxes = () => {
+    removeClasses('box', ['correct', 'incorrect', 'close']);
+  }
+
 
   const resetGame = () => {
     setBoard(createBoard(WORD_LENGTH, NUM_OF_ROUNDS));
@@ -58,18 +67,11 @@ function App() {
     setRoundOver(false);
     setKeyColors(defaultKeyColors);
     setOutcome(() => 0);
-    setNewSolution();
+    setNewSolution(WORD_LIST_URL);
+    resetBoxes()
   };
 
-  useEffect(() => {
-    const resizeRows = () => {
-      setBoxHeight(() => rowHeight());
-    };
-    resizeRows();
-    window.addEventListener('resize', resizeRows);
-    return () => window.removeEventListener('resize', resizeRows);
-    // }, [boxHeight, letterIndex, gameOver]);
-  });
+
 
   // Fetch word list and set solution to random word.
 
@@ -112,7 +114,7 @@ function App() {
           setRoundOver(true);
           checkGameOver();
 
-          // roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
+    
         }
         break;
       }
@@ -136,35 +138,6 @@ function App() {
         }
     }
   };
-
-  // // Set keyboard colors / classes
-
-  // useEffect(() => {
-  //   const solutionArray = solution.split('');
-
-  //   let tempKeys = {};
-  //   const updateKeyColors = () => {
-  //     if (roundOver) {
-  //       board[roundIndex - 1].forEach((guess, index) => {
-  //         // appproach 1
-
-  //         if (tempKeys[guess] === 'correct') return;
-  //         if (guess === solutionArray[index]) {
-  //           tempKeys = { ...tempKeys, [guess]: 'correct' };
-  //         } else if (solution.indexOf(guess) >= 0) {
-  //           tempKeys = { ...tempKeys, [guess]: 'close' };
-  //         } else {
-  //           tempKeys = { ...tempKeys, [guess]: 'incorrect' };
-  //         }
-
-  //         setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
-
-  //       });
-  //     }
-  //   };
-  //   roundIndex <= NUM_OF_ROUNDS && updateKeyColors();
-  //   // }, [roundIndex, keyColors]);
-  // });
 
   const updateKeyColors = () => {
     const solutionArray = solution.split('');
@@ -191,7 +164,6 @@ function App() {
         show={modalVisible}
         onHide={() => setModalVisible(false)}
         outcome={outcome}
-        // setoutcome={setOutcome}
         solution={solution}
       />
 
@@ -209,7 +181,7 @@ function App() {
               keyColors={keyColors}
               setKeyColors={setKeyColors}
               solution={solution}
-              boxHeight={boxHeight}
+              // boxHeight={boxHeight}
             />
           ))}
         </div>
