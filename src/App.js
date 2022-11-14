@@ -42,36 +42,52 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
 
-
-
+  // const getRoundIndex = () => {
+  //   return globalIndex % WORD_LENGTH;
+  // };
   const getRoundIndex = () => {
-    return globalIndex % WORD_LENGTH;
+    return Math.floor(globalIndex / 5);
   };
 
+  const finalLetter = () => {
+    return (globalIndex + 1) % 5 === 0;
+  };
 
+  const xxxletterIndex = () => {
+    return globalIndex % 5;
+  };
+
+  const sameRound = () => {
+    // return (globalIndex - 1) % 5 <= 3;
+    if (globalIndex === 0) {
+      console.log('this is the same round');
+      return true;
+    }
+    // console.log('sameRound=', (globalIndex - 1) % 5);
+    console.log((globalIndex % 5) + 1 === 0);
+    return (globalIndex % 5) + 1 !== 0;
+  };
   const removeClasses = (str, classArray) => {
     const elementArray = document.getElementsByClassName(str);
-    for (let box of elementArray) {    
-        box.classList.remove(...classArray)
+    for (let box of elementArray) {
+      box.classList.remove(...classArray);
     }
-  }
+  };
   const resetBoxes = () => {
     removeClasses('box', ['correct', 'incorrect', 'close']);
-  }
-
+  };
 
   const resetGame = () => {
     setBoard(createBoard(WORD_LENGTH, NUM_OF_ROUNDS));
     setRoundIndex(0);
     setLetterIndex(0);
+    setGlobalIndex(0);
     setRoundOver(false);
     setKeyColors(defaultKeyColors);
     setOutcome(() => 0);
     setNewSolution(WORD_LIST_URL);
-    resetBoxes()
+    resetBoxes();
   };
-
-
 
   // Fetch word list and set solution to random word.
 
@@ -101,48 +117,58 @@ function App() {
   };
 
   const keyEvent = (letter) => {
+    console.log('gIndex:', globalIndex);
     if (gameOver) return;
     switch (letter) {
       case 'Enter': {
-        if (letterIndex >= 5) {
+        // if (letterIndex >= 5) {
+        console.log('enter!');
+        if (finalLetter()) {
+          console.log('final enter!');
           updateKeyColors();
-          setRoundIndex((roundIndex) =>
-            Math.min(NUM_OF_ROUNDS, roundIndex + 1)
-          );
-
-          setLetterIndex(() => 0);
           setRoundOver(true);
           checkGameOver();
-
-    
+          setGlobalIndex(() => globalIndex + 1);
         }
         break;
       }
       case 'Del':
       case 'Backspace': {
-        const previousLetter = Math.max(0, letterIndex - 1);
+        // const previousLetter = Math.max(0, letterIndex - 1);
+        const previousLetter = Math.max(0, xxxletterIndex() - 1);
         const boardCopy = [...board];
-        boardCopy[roundIndex][previousLetter] = ' ';
+        // boardCopy[roundIndex][previousLetter] = ' ';
+        boardCopy[getRoundIndex()][previousLetter] = ' ';
         setBoard(boardCopy);
-        setLetterIndex(previousLetter);
+        // setLetterIndex(previousLetter);
+        setGlobalIndex(() => previousLetter);
         break;
       }
-      default: // Passed testing on https://regex101.com/
-        const isSingleAlphaChar = /^[a-zA-Z]$/;
-        if (letterIndex < 5 && isSingleAlphaChar.test(letter)) {
-          setLetterIndex((letterIndex) => letterIndex + 1);
+      case letter.match(/^[a-zA-Z]$/)?.input:
+        if (sameRound()) {
+          console.log('same round');
           const boardCopy = [...board];
-          boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
+          // boardCopy[roundIndex][letterIndex] = letter.toUpperCase();
+          if (boardCopy[getRoundIndex()][xxxletterIndex()] === ' ') {
+            boardCopy[getRoundIndex()][xxxletterIndex()] = letter.toUpperCase();
+          }
           setBoard(boardCopy);
-          break;
+          if (!finalLetter()) {
+            setGlobalIndex(() => globalIndex + 1);
+          }
         }
+        break;
+
+      default:
+        break;
     }
   };
 
   const updateKeyColors = () => {
     const solutionArray = solution.split('');
     let tempKeys = {};
-    board[roundIndex].forEach((guess, index) => {
+    // board[roundIndex].forEach((guess, index) => {
+    board[getRoundIndex()].forEach((guess, index) => {
       if (tempKeys[guess] === 'correct') return;
 
       if (guess === solutionArray[index]) {
@@ -174,7 +200,8 @@ function App() {
               key={index}
               id={index}
               round={round}
-              roundIndex={roundIndex}
+              // roundIndex={roundIndex}
+              roundIndex={getRoundIndex()}
               roundOver={roundOver}
               setRoundOver={setRoundOver}
               // checkLetter={checkLetter}
