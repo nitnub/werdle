@@ -28,23 +28,25 @@ const Row = ({
     return () => window.removeEventListener('resize', resizeRows);
   });
   const [thisRoundIsOver, setThisRoundIsOver] = useState(false);
-  const [classes, setClasses] = useState('');
-  // console.log(`[debug] Classes (box level): ${classes}`);
+
   useEffect(() => {
+
     if (globalIndex === 0) {
       setThisRoundIsOver(false);
     }
-  });
+  }, [globalIndex]);
 
   useEffect(() => {
+
     // Only check the most recent round and those that came before it
     if (roundOver && id < roundIndex) {
+
       setSameRound(() => true);
       // setNewRound(() => true);
       setThisRoundIsOver(() => true);
     }
     setRoundOver(false);
-  });
+  }, [roundOver, id, roundIndex, setRoundOver, setSameRound]);
 
   return (
     <div className="row">

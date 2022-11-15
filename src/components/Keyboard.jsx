@@ -17,7 +17,6 @@ const Keyboard = ({ keyColors, keyEvent }) => {
   });
 
   const clickHandler = (e) => {
-    // console.log(e);
     keyEvent(e.target.innerText);
   };
 
