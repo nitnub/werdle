@@ -6,8 +6,8 @@ import Row from '../src/components/Row';
 import GameOver from '../src/components/GameOver';
 
 // Word resource link
-// const WORD_LIST_URL = './res/words.json';
-const WORD_LIST_URL = './res/words.test.json';
+const WORD_LIST_URL = './res/words.json';
+// const WORD_LIST_URL = './res/words.test.json';
 const WORD_LENGTH = 5;
 const NUM_OF_ROUNDS = 6;
 
