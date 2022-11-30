@@ -199,7 +199,8 @@ function App() {
     let tempKeys = {};
 
     board[getRoundIndex() - 1].forEach((guess, index) => {
-      if (tempKeys[guess] === 'correct') return;
+      if (keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')
+        return;
       if (guess === solutionArray[index]) {
         tempKeys = { ...tempKeys, [guess]: 'correct' };
       } else if (solution.indexOf(guess) >= 0) {
