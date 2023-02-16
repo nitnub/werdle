@@ -4,12 +4,18 @@ import Header from '../src/components/Header';
 import Keyboard from '../src/components/Keyboard';
 import Row from '../src/components/Row';
 import GameOver from '../src/components/GameOver';
-
+// import Footer from './components/Footer';
+import SettingsBar from './components/SettingsBar/SettingsBar';
+// import setNewSolution from './utils/getWordOfLength';
+import getWordOfLength from './utils/getWordOfLength';
 // Word resource link
-const WORD_LIST_URL = './res/words.json';
+// const WORD_LIST_URL = './res/words.json';
+// const WORD_LIST_URL = './res/words.sorted.json';
 // const WORD_LIST_URL = './res/words.test.json';
-const WORD_LENGTH = 5;
-const NUM_OF_ROUNDS = 6;
+// const WORD_LENGTH = 5;
+// const NUM_OF_ROUNDS = 6;
+const defaultLength = 5;
+const defaultGuesses = 6;
 
 // Create board using defined number of letters per round and rounds per game
 const createBoard = (WORD_LENGTH, NUM_OF_ROUNDS) => {
@@ -20,7 +26,7 @@ const createBoard = (WORD_LENGTH, NUM_OF_ROUNDS) => {
   }
   return game;
 };
-let game = createBoard(WORD_LENGTH, NUM_OF_ROUNDS);
+let game = createBoard(defaultLength, defaultGuesses);
 
 // Create starter object with Default key colors
 const defaultKeyColors = {};
@@ -40,17 +46,22 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [outcome, setOutcome] = useState(0);
 
+  // Settings Bar
+
+  const [length, setLength] = useState(defaultLength);
+  const [guesses, setGuesses] = useState(defaultGuesses);
+
   const getRoundIndex = () => {
-    return Math.floor(globalIndex / WORD_LENGTH);
+    return Math.floor(globalIndex / length);
   };
 
   const finalLetter = () => {
     if (globalIndex === 0) return false;
-    return globalIndex % WORD_LENGTH === 0;
+    return globalIndex % length === 0;
   };
 
   const xxxletterIndex = () => {
-    return globalIndex % WORD_LENGTH;
+    return globalIndex % length;
   };
 
   const allowDelete = () => {
@@ -77,9 +88,10 @@ function App() {
     removeClasses('box', ['correct', 'incorrect', 'close']);
   };
 
-  const resetGame = () => {
-    setNewSolution(WORD_LIST_URL);
-    setBoard(createBoard(WORD_LENGTH, NUM_OF_ROUNDS));
+  // const resetGame = (newLength = length, newGuesses = guesses) => {
+  const resetGame = async () => {
+    setSolution(await getWordOfLength(length));
+    setBoard(createBoard(length, guesses));
 
     setRoundOver(false);
     setKeyColors(defaultKeyColors);
@@ -91,20 +103,13 @@ function App() {
     resetBoxes();
   };
 
-  // Fetch word list and set solution to random word.
+  useEffect( () => {
 
-  async function setNewSolution(url) {
-    const req = await fetch(url);
-    const wordList = await req.json().then((obj) => obj.data);
-    // console.log(wordList);
-    // const word = json[Math.floor(Math.random() * json.length)];
-    const word = wordList[Math.floor(Math.random() * wordList.length)];
-    console.log(`word:`, word);
-    setSolution(word);
-  }
-
-  useEffect(() => {
-    setNewSolution(WORD_LIST_URL);
+    async function update() {
+      setSolution(await getWordOfLength(length));
+    };
+    console.log('sol', solution)
+    update()
   }, []);
 
   const checkGameOver = () => {
@@ -117,7 +122,7 @@ function App() {
       setOutcome(1);
       setModalVisible(() => true);
       // } else if (roundIndex === NUM_OF_ROUNDS - 1) {
-    } else if (getRoundIndex() === NUM_OF_ROUNDS) {
+    } else if (getRoundIndex() === guesses) {
       // console.log(`[debug] getRoundIndex() === NUM_OF_ROUNDS: ${getRoundIndex()} === ${NUM_OF_ROUNDS}`);
       setGameOver(true);
       setOutcome(2);
@@ -155,7 +160,7 @@ function App() {
           const previousIndex = Math.max(0, globalIndex - 1);
 
           if (xxxletterIndex() === 0 && !sameRound) {
-            boardCopy[getRoundIndex() - 1][WORD_LENGTH - 1] = ' ';
+            boardCopy[getRoundIndex() - 1][length - 1] = ' ';
             setGlobalIndex(() => previousIndex);
           } else {
             boardCopy[getRoundIndex()][xxxletterIndex() - 1] = ' ';
@@ -180,10 +185,10 @@ function App() {
           if (sameRound) {
             setGlobalIndex(() => globalIndex + 1);
           }
-          if (globalIndex > 0 && xxxletterIndex() === WORD_LENGTH - 1) {
+          if (globalIndex > 0 && xxxletterIndex() === length - 1) {
             setSameRound(() => false);
           }
-          if (globalIndex > 0 && xxxletterIndex() < WORD_LENGTH - 1) {
+          if (globalIndex > 0 && xxxletterIndex() < length - 1) {
             setSameRound(() => true);
           }
         }
@@ -213,36 +218,44 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <>
       <Header resetGame={resetGame} />
-
-      <GameOver
-        show={modalVisible}
-        onHide={() => setModalVisible(false)}
-        outcome={outcome}
-        solution={solution}
-      />
-
-      <div className="game-container">
-        <div id="game-board" className="game-board">
-          {board.map((round, index) => (
-            <Row
-              key={index}
-              id={index}
-              round={round}
-              roundIndex={getRoundIndex()}
-              roundOver={roundOver}
-              setRoundOver={setRoundOver}
-              solution={solution}
-              globalIndex={globalIndex}
-              setGlobalIndex={setGlobalIndex}
-              setSameRound={setSameRound}
-            />
-          ))}
+      <div className="container">
+        <GameOver
+          show={modalVisible}
+          onHide={() => setModalVisible(false)}
+          outcome={outcome}
+          solution={solution}
+        />
+        <div className="game-container">
+          <SettingsBar
+            defaultLength={defaultLength}
+            setLength={setLength}
+            defaultGuesses={defaultGuesses}
+            setGuesses={setGuesses}
+            resetGame={resetGame}
+          />
+          <div id="game-board" className="game-board">
+            {board.map((round, index) => (
+              <Row
+                key={index}
+                id={index}
+                round={round}
+                roundIndex={getRoundIndex()}
+                roundOver={roundOver}
+                setRoundOver={setRoundOver}
+                solution={solution}
+                globalIndex={globalIndex}
+                setGlobalIndex={setGlobalIndex}
+                setSameRound={setSameRound}
+              />
+            ))}
+          </div>
         </div>
+        <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
+        {/* <Footer /> */}
       </div>
-      <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
-    </div>
+    </>
   );
 }
 

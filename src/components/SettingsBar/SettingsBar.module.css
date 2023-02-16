@@ -1,0 +1,8 @@
+.settingsContainer {
+  font-size: small;
+  display: flex;
+}
+
+.btn {
+  font-size: medium;
+}
