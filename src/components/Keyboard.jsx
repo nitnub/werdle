@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+// const defaultKeyColors = {};
 
 const Keyboard = ({ keyColors, keyEvent }) => {
   const keyLayout = [
@@ -7,11 +8,25 @@ const Keyboard = ({ keyColors, keyEvent }) => {
     ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Del'],
   ];
 
+  // const allowableKeys = [...Array(26)]
+  const allowableKeys = [...Array(26)].map((elem, index) =>
+    String.fromCharCode(index + 97)
+  );
+  // .forEach((letter) => (defaultKeyColors[letter] = 'unselected'));
+  allowableKeys.push('Enter');
+  allowableKeys.push('Backspace');
+  // console.log(allowableKeys);
+
   // Listen for physical key press
   useEffect(() => {
     const physicalKeyEvent = (e) => {
-      keyEvent(e.key);
+      console.log('key is', e.key);
+      if (allowableKeys.includes(e.key)) {
+        keyEvent(e.key);
+      }
     };
+    // TODO: might be able to remove avove check for inclusion in allowable keys list
+
     window.addEventListener('keydown', physicalKeyEvent);
     return () => window.removeEventListener('keydown', physicalKeyEvent);
   });

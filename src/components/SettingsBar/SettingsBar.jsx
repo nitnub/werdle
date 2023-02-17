@@ -18,7 +18,7 @@ const SettingsBar = ({
 
   return (
     <>
-      <Form className={styles.settingsContainer} onSubmit={resetGame}>
+      <Form className={`${styles.settingsContainer} desktop-only`}>
         <Form.Select
           size="sm"
           defaultValue={defaultLength}
@@ -44,7 +44,9 @@ const SettingsBar = ({
             </option>
           ))}
         </Form.Select>
-        <Button className={styles.btn}>Update</Button>
+        <Button className={styles.btn} onClick={() => resetGame()}>
+          Update
+        </Button>
       </Form>
     </>
   );

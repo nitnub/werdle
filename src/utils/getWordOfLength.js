@@ -4,5 +4,5 @@ export default async function getWordOfLength(length) {
   const wordList = json[length].data;
 
   const word = wordList[Math.floor(Math.random() * wordList.length)];
-  return await word;
+  return await word.toUpperCase();
 }

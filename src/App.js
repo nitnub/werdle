@@ -18,10 +18,10 @@ const defaultLength = 5;
 const defaultGuesses = 6;
 
 // Create board using defined number of letters per round and rounds per game
-const createBoard = (WORD_LENGTH, NUM_OF_ROUNDS) => {
-  let round = Array(WORD_LENGTH).fill(' ');
+const createBoard = (wordLength, guessCount) => {
+  let round = Array(wordLength).fill(' ');
   let game = [];
-  for (let i = 0; i < NUM_OF_ROUNDS; i++) {
+  for (let i = 0; i < guessCount; i++) {
     game.push([...round]);
   }
   return game;
@@ -60,16 +60,16 @@ function App() {
     return globalIndex % length === 0;
   };
 
-  const xxxletterIndex = () => {
+  const wordIndex = () => {
     return globalIndex % length;
   };
 
   const allowDelete = () => {
     if (globalIndex === 0) return false;
 
-    // if (!newRound && xxxletterIndex() === 0) return true;
-    if (!sameRound && xxxletterIndex() === 0) return true;
-    if (xxxletterIndex() === 0) return false;
+    // if (!newRound && wordIndex() === 0) return true;
+    if (!sameRound && wordIndex() === 0) return true;
+    if (wordIndex() === 0) return false;
 
     console.log('trearfea false');
     return true;
@@ -90,6 +90,7 @@ function App() {
 
   // const resetGame = (newLength = length, newGuesses = guesses) => {
   const resetGame = async () => {
+    console.log('reset game!');
     setSolution(await getWordOfLength(length));
     setBoard(createBoard(length, guesses));
 
@@ -101,15 +102,15 @@ function App() {
     setOutcome(0);
 
     resetBoxes();
+    console.log('solution', solution);
   };
 
-  useEffect( () => {
-
+  useEffect(() => {
     async function update() {
       setSolution(await getWordOfLength(length));
-    };
-    console.log('sol', solution)
-    update()
+    }
+    console.log('sol', solution);
+    update();
   }, []);
 
   const checkGameOver = () => {
@@ -131,20 +132,24 @@ function App() {
   };
 
   const keyEvent = (letter) => {
-    if (xxxletterIndex() >= 1) setSameRound(() => false);
+    if (wordIndex() >= 1) setSameRound(() => false);
 
     if (gameOver) return;
+
+    // if (letter === 'Enter' && !finalLetter()) {
+    //   setSameRound(() => true);
+    //   return;
+    // }
+
     switch (letter) {
       case 'Enter': {
         // if (letterIndex >= 5) {
         // console.log('enter!');
-
-        // if ()
-
+        setSameRound(() => true);
         if (finalLetter()) {
           console.log('final enter!');
-          updateKeyColors();
           setRoundOver(() => true);
+          updateKeyColors();
           checkGameOver();
 
           // setGlobalIndex(() => globalIndex + 1);
@@ -159,11 +164,11 @@ function App() {
 
           const previousIndex = Math.max(0, globalIndex - 1);
 
-          if (xxxletterIndex() === 0 && !sameRound) {
+          if (wordIndex() === 0 && !sameRound) {
             boardCopy[getRoundIndex() - 1][length - 1] = ' ';
             setGlobalIndex(() => previousIndex);
           } else {
-            boardCopy[getRoundIndex()][xxxletterIndex() - 1] = ' ';
+            boardCopy[getRoundIndex()][wordIndex() - 1] = ' ';
             setGlobalIndex(() => previousIndex);
           }
 
@@ -173,29 +178,30 @@ function App() {
 
         break;
       }
-      case letter.match(/^[a-zA-Z]$/)?.input:
+      case letter.match(/^[a-zA-Z]$/)?.input: {
         if (sameRound) {
-          console.log();
+          console.log('letter matches:', letter);
           const boardCopy = [...board];
-          if (boardCopy[getRoundIndex()][xxxletterIndex()] === ' ') {
-            boardCopy[getRoundIndex()][xxxletterIndex()] = letter.toUpperCase();
+          if (boardCopy[getRoundIndex()][wordIndex()] === ' ') {
+            boardCopy[getRoundIndex()][wordIndex()] = letter.toUpperCase();
           }
           setBoard(boardCopy);
 
           if (sameRound) {
             setGlobalIndex(() => globalIndex + 1);
           }
-          if (globalIndex > 0 && xxxletterIndex() === length - 1) {
+          if (globalIndex > 0 && wordIndex() === length - 1) {
             setSameRound(() => false);
           }
-          if (globalIndex > 0 && xxxletterIndex() < length - 1) {
+          if (globalIndex > 0 && wordIndex() < length - 1) {
             setSameRound(() => true);
           }
         }
         break;
-
+      }
       default:
-        break;
+        console.log(letter);
+        setGlobalIndex(globalIndex);
     }
   };
 
@@ -219,8 +225,8 @@ function App() {
 
   return (
     <>
-      <Header resetGame={resetGame} />
       <div className="container">
+        <Header resetGame={resetGame} />
         <GameOver
           show={modalVisible}
           onHide={() => setModalVisible(false)}
