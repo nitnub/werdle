@@ -20,8 +20,9 @@ const Keyboard = ({ keyColors, keyEvent }) => {
   // Listen for physical key press
   useEffect(() => {
     const physicalKeyEvent = (e) => {
-      console.log('key is', e.key);
+      console.log('key is', e.key.toUpperCase());
       if (allowableKeys.includes(e.key)) {
+        // keyEvent(e.key.toUpperCase());
         keyEvent(e.key);
       }
     };

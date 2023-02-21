@@ -16,6 +16,8 @@ To run this project, simply navigate to [https://nitnub.github.io/live-bus-track
 * Add refresh button to make getting a new word more intuitive
 * Add dark/light mode switch
 
+##
+-- Uses hamburger button from <a target="_blank" href="https://icons8.com/icon/k1Q9gcdbeRVn/hamburger-menu">hamburger menu</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 ## License Information
 

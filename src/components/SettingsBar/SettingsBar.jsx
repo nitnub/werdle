@@ -3,26 +3,28 @@ import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import styles from './SettingsBar.module.css';
 
-const SettingsBar = ({
-  defaultLength,
-  setLength,
-  defaultGuesses,
-  setGuesses,
-  resetGame,
-}) => {
+const SettingsBar = ({ settings }) => {
   // const defaultLength = 5;
   // const defaultGuesses = 6;
+  // console.log('settings:')
+  // console.log(settings)
+  const { defaultLength, setLength, defaultGuesses, setGuesses, resetGame } =
+    settings;
 
   const wordLengths = [4, 5, 6, 7, 8, 9, 10, 11];
   const guessRange = getRangeArray(3, 10);
+  // potato += 1;
+  // const cow = potato + 3;
 
+  // console.log('cow total', cow);
   return (
     <>
-      <Form className={`${styles.settingsContainer} desktop-only`}>
+      <Form className={styles.settingsContainer}>
         <Form.Select
+          className="form-select"
           size="sm"
-          defaultValue={defaultLength}
-          onChange={(e) => setLength(() => Number(e.target.value))}
+          defaultValue={settings.defaultLength}
+          onChange={(e) => settings.setLength(() => Number(e.target.value))}
         >
           {/* <option>Word Length</option> */}
           {wordLengths.map((len) => (
@@ -31,11 +33,12 @@ const SettingsBar = ({
             </option>
           ))}
         </Form.Select>
-        {` x `}
+        xs
         <Form.Select
+          className="form-select"
           size="sm"
-          defaultValue={defaultGuesses}
-          onChange={(e) => setGuesses(() => Number(e.target.value))}
+          defaultValue={settings.defaultGuesses}
+          onChange={(e) => settings.setGuesses(() => Number(e.target.value))}
         >
           {/* <option>guesses</option> */}
           {guessRange.map((len) => (
@@ -44,7 +47,7 @@ const SettingsBar = ({
             </option>
           ))}
         </Form.Select>
-        <Button className={styles.btn} onClick={() => resetGame()}>
+        <Button className={styles.btn} onClick={() => settings.resetGame()}>
           Update
         </Button>
       </Form>
@@ -61,3 +64,6 @@ function getRangeArray(low, high) {
   }
   return rangeArray;
 }
+// let potato = 100;
+
+// export { potato };

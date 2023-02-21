@@ -8,6 +8,7 @@ import GameOver from '../src/components/GameOver';
 import SettingsBar from './components/SettingsBar/SettingsBar';
 // import setNewSolution from './utils/getWordOfLength';
 import getWordOfLength from './utils/getWordOfLength';
+
 // Word resource link
 // const WORD_LIST_URL = './res/words.json';
 // const WORD_LIST_URL = './res/words.sorted.json';
@@ -132,6 +133,7 @@ function App() {
   };
 
   const keyEvent = (letter) => {
+    console.log('letter coming in is !...', letter);
     if (wordIndex() >= 1) setSameRound(() => false);
 
     if (gameOver) return;
@@ -140,6 +142,7 @@ function App() {
     //   setSameRound(() => true);
     //   return;
     // }
+    console.log('letter coming in is...', letter);
 
     switch (letter) {
       case 'Enter': {
@@ -223,10 +226,19 @@ function App() {
     });
   };
 
+  const settings = {
+    defaultLength,
+    setLength,
+    defaultGuesses,
+    setGuesses,
+    resetGame,
+  };
+
   return (
     <>
-      <div className="container">
-        <Header resetGame={resetGame} />
+      {/* <div className="container"> */}
+      
+        <Header resetGame={resetGame} settings={settings} />
         <GameOver
           show={modalVisible}
           onHide={() => setModalVisible(false)}
@@ -234,13 +246,16 @@ function App() {
           solution={solution}
         />
         <div className="game-container">
-          <SettingsBar
-            defaultLength={defaultLength}
-            setLength={setLength}
-            defaultGuesses={defaultGuesses}
-            setGuesses={setGuesses}
-            resetGame={resetGame}
-          />
+          <div className="desktop-only">
+            <SettingsBar
+              settings={settings}
+              // defaultLength={defaultLength}
+              // setLength={setLength}
+              // defaultGuesses={defaultGuesses}
+              // setGuesses={setGuesses}
+              // resetGame={resetGame}
+            />
+          </div>
           <div id="game-board" className="game-board">
             {board.map((round, index) => (
               <Row
@@ -260,7 +275,7 @@ function App() {
         </div>
         <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
         {/* <Footer /> */}
-      </div>
+      {/* </div> */}
     </>
   );
 }
