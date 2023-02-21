@@ -21,8 +21,8 @@ const SettingsBar = ({ settings }) => {
     <>
       <Form className={styles.settingsContainer}>
         <Form.Select
-          className="form-select"
-          size="sm"
+          className={styles.formSelect}
+          // size="lg"
           defaultValue={settings.defaultLength}
           onChange={(e) => settings.setLength(() => Number(e.target.value))}
         >
@@ -33,9 +33,10 @@ const SettingsBar = ({ settings }) => {
             </option>
           ))}
         </Form.Select>
-        xs
+        <div className={styles.spacer} disabled>x</div>
         <Form.Select
-          className="form-select"
+         className={styles.formSelect}
+          // className="form-select"
           size="sm"
           defaultValue={settings.defaultGuesses}
           onChange={(e) => settings.setGuesses(() => Number(e.target.value))}
@@ -47,7 +48,7 @@ const SettingsBar = ({ settings }) => {
             </option>
           ))}
         </Form.Select>
-        <Button className={styles.btn} onClick={() => settings.resetGame()}>
+        <Button className={styles.btn} variant="outline-dark" onClick={() => settings.resetGame()}>
           Update
         </Button>
       </Form>

@@ -1,8 +1,26 @@
 .settingsContainer {
-  font-size: small;
+  font-size:medium;
   display: flex;
+  margin-left: 74px;
+}
+
+.formSelect {
+  font-size: small;
+  width: 112px;
+  margin: 4px;
+  height: 2.5em;
 }
 
 .btn {
   font-size: medium;
+}
+
+.spacer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  
+  /* background-color: red; */
 }

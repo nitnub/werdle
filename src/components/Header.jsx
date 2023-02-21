@@ -118,8 +118,8 @@ const Header = ({ resetGame, settings }) => {
         </NavDropdown> */}
           {/* <div className="header-section"> */}
             <div className="nav">
-              <Nav.Link className="drawer-settings drawer-only">
-                <SettingsBar
+              <div className="drawer-settings drawer-only" disabled>
+                <SettingsBar className="drawer-settings drawer-only"
                   settings={settings}
                   // defaultLength={settings.defaultLength}
                   // setLength={settings.setLength}
@@ -127,14 +127,15 @@ const Header = ({ resetGame, settings }) => {
                   // setGuesses={settings.setGuesses}
                   // resetGame={settings.resetGame}
                 />
-              </Nav.Link>
-
+              </div>
+              
+             
               <div className="external-links">
                 <Nav.Link
                   href="https://linkedin.com/in/nick-bryant-6b1a9579"
                   title="Visit me on LinkedIn"
                 >
-                  <svg
+                  <svg 
                     className="contact-link bi bi-linkedin"
                     viewBox="0 0 16 16"
                   >

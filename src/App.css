@@ -68,7 +68,7 @@ body {
   /* width: 100%; */
   width: 33%;
   /* height: 64px; */
-  background-color: blue;
+  /* background-color: blue; */
 }
 
 .header-section .title {
@@ -131,7 +131,8 @@ body {
 .contact-link {
   height: 0.75em;
   fill: var(--clr-white);
-  padding-right: 12px;
+  /* padding-right: 12px; */
+  
 }
 
 .game-container {
@@ -285,50 +286,48 @@ body {
     top: 10px;
     left: 16px;
   }
-
+  
   .title {
     font-size:large;
     /* font-size:medium; */
   }
-
+  
   .header-section{
+   
     width: 100%;
     /* background-color: blue; */
   }
-  .me-auto {
-    /* display: flex; */
-    /* width: 100%; */
-    /* justify-content: flex-end; */
-    /* background-color: yellow; */
-  }
+
   .nav {
 
     /* width: 100%; */
     
     justify-content: flex-start;
-    margin: 6px;
+    margin: 8px;
+    padding-top: 10px;
     /* background-color: red; */
   }
 
 
   .toggle-container {
+    height: 42px;
     display: flex;
     width: 100%;
     justify-content: end;
+    align-items: center;
   }
 
 
   .external-links {
     display: flex;
     width: 100%;
+    /* height: 33px; */
     justify-content: center;
+    /* justify-content: flex-end; */
     /* background-color: blue; */
   }
   
-  .form-select {
-    width: 124px;
-    margin-right: 8px;
-  }
+ 
 
   .desktop-only {
     visibility: hidden;
@@ -347,7 +346,10 @@ body {
   }
 
   .drawer-settings {
+    display: flex;
     width: 100%;
+    /* height: 33px; */
+    justify-content: center;
   }
 
   .keyboard {
