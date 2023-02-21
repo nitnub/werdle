@@ -236,7 +236,7 @@ function App() {
 
   return (
     <>
-      {/* <div className="container"> */}
+      <div className="content">
       
         <Header resetGame={resetGame} settings={settings} />
         <GameOver
@@ -246,7 +246,7 @@ function App() {
           solution={solution}
         />
         <div className="game-container">
-          <div className="desktop-only">
+          <div className="settings desktop-only">
             <SettingsBar
               settings={settings}
               // defaultLength={defaultLength}
@@ -275,7 +275,7 @@ function App() {
         </div>
         <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
         {/* <Footer /> */}
-      {/* </div> */}
+      </div>
     </>
   );
 }
