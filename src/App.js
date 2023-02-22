@@ -1,20 +1,20 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
-import Header from '../src/components/Header';
-import Keyboard from '../src/components/Keyboard';
-import Row from '../src/components/Row';
+import gameStateReducer from './context/gameStateReducer';
+import React, { useEffect, useReducer, useState } from 'react';
+import defaultState from './context/defaultState';
+// import GameBoard from './components/GameBoard';
+import Board from './components/GameBoard/Board';
+// import Header from '../src/components/Header';
+import Header from './components/Header';
+// import Keyboard from '../src/components/Keyboard';
+// import Keyboard from './components/Keyboard';
+import Keyboard from './components/Keyboard';
+import Row from './components/xRow';
 import GameOver from '../src/components/GameOver';
-// import Footer from './components/Footer';
-import SettingsBar from './components/SettingsBar/SettingsBar';
-// import setNewSolution from './utils/getWordOfLength';
+import SettingsBar from './components/SettingsBar';
 import getWordOfLength from './utils/getWordOfLength';
+// import Header from './components/Header'
 
-// Word resource link
-// const WORD_LIST_URL = './res/words.json';
-// const WORD_LIST_URL = './res/words.sorted.json';
-// const WORD_LIST_URL = './res/words.test.json';
-// const WORD_LENGTH = 5;
-// const NUM_OF_ROUNDS = 6;
 const defaultLength = 5;
 const defaultGuesses = 6;
 
@@ -31,9 +31,9 @@ let game = createBoard(defaultLength, defaultGuesses);
 
 // Create starter object with Default key colors
 const defaultKeyColors = {};
-[...Array(26)]
-  .map((elem, index) => String.fromCharCode(index + 65))
-  .forEach((letter) => (defaultKeyColors[letter] = 'unselected'));
+// [...Array(26)]
+//   .map((elem, index) => String.fromCharCode(index + 65))
+//   .forEach((letter) => (defaultKeyColors[letter] = 'unselected'));
 
 function App() {
   const [solution, setSolution] = useState('');
@@ -48,9 +48,16 @@ function App() {
   const [outcome, setOutcome] = useState(0);
 
   // Settings Bar
-
   const [length, setLength] = useState(defaultLength);
   const [guesses, setGuesses] = useState(defaultGuesses);
+
+  // Reducer State
+  const [state, dispatch] = useReducer(gameStateReducer, defaultState);
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_SUCCESS', payload: 'test' });
+    console.log(state.board);
+  }, []);
 
   const getRoundIndex = () => {
     return Math.floor(globalIndex / length);
@@ -67,8 +74,6 @@ function App() {
 
   const allowDelete = () => {
     if (globalIndex === 0) return false;
-
-    // if (!newRound && wordIndex() === 0) return true;
     if (!sameRound && wordIndex() === 0) return true;
     if (wordIndex() === 0) return false;
 
@@ -78,9 +83,6 @@ function App() {
   const removeClasses = (str, classArray) => {
     const elementArray = document.getElementsByClassName(str);
     for (let box of elementArray) {
-      // box.classList.remove(...classArray);
-      // box.classList.add(['undefined']);
-      // box.className = 'box undefined'
       box.className = 'box undefined';
     }
     console.log(elementArray);
@@ -89,7 +91,6 @@ function App() {
     removeClasses('box', ['correct', 'incorrect', 'close']);
   };
 
-  // const resetGame = (newLength = length, newGuesses = guesses) => {
   const resetGame = async () => {
     console.log('reset game!');
     setSolution(await getWordOfLength(length));
@@ -110,7 +111,6 @@ function App() {
     async function update() {
       setSolution(await getWordOfLength(length));
     }
-    console.log('sol', solution);
     update();
   }, []);
 
@@ -123,9 +123,7 @@ function App() {
       setGameOver(true);
       setOutcome(1);
       setModalVisible(() => true);
-      // } else if (roundIndex === NUM_OF_ROUNDS - 1) {
     } else if (getRoundIndex() === guesses) {
-      // console.log(`[debug] getRoundIndex() === NUM_OF_ROUNDS: ${getRoundIndex()} === ${NUM_OF_ROUNDS}`);
       setGameOver(true);
       setOutcome(2);
       setModalVisible(() => true);
@@ -138,25 +136,15 @@ function App() {
 
     if (gameOver) return;
 
-    // if (letter === 'Enter' && !finalLetter()) {
-    //   setSameRound(() => true);
-    //   return;
-    // }
-    console.log('letter coming in is...', letter);
-
     switch (letter) {
       case 'Enter': {
-        // if (letterIndex >= 5) {
-        // console.log('enter!');
         setSameRound(() => true);
         if (finalLetter()) {
+          // Put reducer in this if block, not outside!
           console.log('final enter!');
           setRoundOver(() => true);
           updateKeyColors();
-          checkGameOver();
-
-          // setGlobalIndex(() => globalIndex + 1);
-          console.log(letter);
+          checkGameOver(); // keep this separate, not a part of END_TURN reducer
         }
         break;
       }
@@ -226,7 +214,7 @@ function App() {
     });
   };
 
-  const settings = {
+  const settingsProps = {
     defaultLength,
     setLength,
     defaultGuesses,
@@ -237,26 +225,20 @@ function App() {
   return (
     <>
       <div className="content">
-      
-        <Header resetGame={resetGame} settings={settings} />
+        <Header resetGame={resetGame} settings={settingsProps} />
         <GameOver
           show={modalVisible}
           onHide={() => setModalVisible(false)}
           outcome={outcome}
           solution={solution}
         />
+
         <div className="game-container">
           <div className="settings desktop-only">
-            <SettingsBar
-              settings={settings}
-              // defaultLength={defaultLength}
-              // setLength={setLength}
-              // defaultGuesses={defaultGuesses}
-              // setGuesses={setGuesses}
-              // resetGame={resetGame}
-            />
+            <SettingsBar settings={settingsProps} />
           </div>
-          <div id="game-board" className="game-board">
+          <Board state={state} dispatch={dispatch} />
+          {/* <div id="game-board" className="game-board">
             {board.map((round, index) => (
               <Row
                 key={index}
@@ -271,9 +253,15 @@ function App() {
                 setSameRound={setSameRound}
               />
             ))}
-          </div>
+          </div> */}
         </div>
-        <Keyboard keyColors={keyColors} keyEvent={keyEvent} />
+        <Keyboard
+          state={state}
+          dispatch={dispatch}
+          keyColors={keyColors}
+          keyEvent={keyEvent}
+        />
+        {/* <Keyboard state={state} dispatch={dispatch} keyColors={keyColors} keyEvent={keyEvent} /> */}
         {/* <Footer /> */}
       </div>
     </>

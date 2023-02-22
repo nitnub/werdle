@@ -1,19 +1,20 @@
-// last updated 11/15/22
-
 import React, { useEffect, useState } from 'react';
+import Box from '../Box';
+import { action } from '../../../context/gameStateReducer';
 
-import Box from './Box';
-const Row = ({
+export default function Row ({
   id,
+  state,
+  dispatch,
   round,
-  solution,
-  roundIndex,
-  roundOver,
-  setRoundOver,
-  globalIndex,
-  setSameRound,
-  setNewRound,
-}) => {
+  // solution,
+  // roundIndex,
+  // roundOver,
+  // setRoundOver,
+  // globalIndex,
+  // setSameRound,
+  // setNewRound,
+}) {
   // Set box sizes
   const rowHeight = () => document.getElementById('box0')?.clientHeight;
   // const boardHeight = () => document.getElementById('game-board')?.clientHeight;
@@ -27,26 +28,30 @@ const Row = ({
     window.addEventListener('resize', resizeRows);
     return () => window.removeEventListener('resize', resizeRows);
   });
+  
   const [thisRoundIsOver, setThisRoundIsOver] = useState(false);
 
   useEffect(() => {
 
-    if (globalIndex === 0) {
+    if (state.globalIndex === 0) {
       setThisRoundIsOver(false);
     }
-  }, [globalIndex]);
+  }, [state.globalIndex]);
 
   useEffect(() => {
 
     // Only check the most recent round and those that came before it
-    if (roundOver && id < roundIndex) {
+    if (state.roundOver && id < state.roundIndex) {
 
-      setSameRound(() => true);
+      // setSameRound(() => true);
+      dispatch({type: action.updateSameRound, payload: true})
       // setNewRound(() => true);
       setThisRoundIsOver(() => true);
     }
-    setRoundOver(false);
-  }, [roundOver, id, roundIndex, setRoundOver, setSameRound]);
+    // setRoundOver(false);
+    dispatch({type: action.updateRoundOver, payload: false})
+  // }, [state.roundOver, id, state.roundIndex]);
+  }, [dispatch, id, state.roundIndex,  state.roundOver]);
 
   return (
     <div className="row">
@@ -54,15 +59,16 @@ const Row = ({
         <Box
           key={`b${index}`}
           index={index}
+          // state={state}
+          // dispatch={dispatch}
           letter={letter}
           // classes={classes}
           boxHeight={boxHeight}
           // roundOver={roundOver}
           thisRoundIsOver={thisRoundIsOver}
-          solution={solution}
+          solution={state.solution}
         />
       ))}
     </div>
   );
 };
-export default Row;
