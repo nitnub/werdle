@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Box from '../Box';
 import { action } from '../../../context/gameStateReducer';
 
-export default function Row ({
+export default function Row({
   id,
   state,
   dispatch,
@@ -28,38 +28,39 @@ export default function Row ({
     window.addEventListener('resize', resizeRows);
     return () => window.removeEventListener('resize', resizeRows);
   });
-  
+
   const [thisRoundIsOver, setThisRoundIsOver] = useState(false);
 
   useEffect(() => {
-
     if (state.globalIndex === 0) {
       setThisRoundIsOver(false);
     }
   }, [state.globalIndex]);
 
   useEffect(() => {
-
     // Only check the most recent round and those that came before it
-    if (state.roundOver && id < state.roundIndex) {
-
+    console.log('thisround is over', state.roundOver);
+    console.log('thisround is over', id);
+    console.log('thisround is over', state.roundIndex);
+    const roundIndex = Math.floor(state.globalIndex / state.wordLength);
+    if (state.roundOver && id < roundIndex) {
       // setSameRound(() => true);
-      dispatch({type: action.updateSameRound, payload: true})
+      dispatch({ type: action.updateSameRound, payload: true });
       // setNewRound(() => true);
       setThisRoundIsOver(() => true);
     }
     // setRoundOver(false);
-    dispatch({type: action.updateRoundOver, payload: false})
-  // }, [state.roundOver, id, state.roundIndex]);
-  }, [dispatch, id, state.roundIndex,  state.roundOver]);
-
+    dispatch({ type: action.updateRoundOver, payload: false });
+    // }, [state.roundOver, id, state.roundIndex]);
+    // }, [dispatch, id, state.roundIndex,  state.roundOver]);
+  }, [state.roundOver]);
   return (
     <div className="row">
       {round.map((letter, index) => (
         <Box
           key={`b${index}`}
           index={index}
-          // state={state}
+          state={state}
           // dispatch={dispatch}
           letter={letter}
           // classes={classes}
@@ -71,4 +72,4 @@ export default function Row ({
       ))}
     </div>
   );
-};
+}

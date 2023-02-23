@@ -9,13 +9,13 @@ export default function GameBoard({state, dispatch}) {
         <Row
           key={index}
           id={index}
-          state={state}
+          // state={state}
           dispatch={dispatch}
           // round={round}
           // roundIndex={getRoundIndex()}
           // roundOver={roundOver}
           // setRoundOver={setRoundOver}
-          // solution={solution}
+          solution={state.solution}
           // globalIndex={globalIndex}
           // setGlobalIndex={setGlobalIndex}
           // setSameRound={setSameRound}

@@ -15,7 +15,6 @@ export const action = {
   updateKeyColors: 'UPDATE_KEY_COLORS',
 };
 
-
 export default function Keyboard({ state, dispatch, keyColors, keyEvent }) {
   const keyLayout = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -39,17 +38,20 @@ export default function Keyboard({ state, dispatch, keyColors, keyEvent }) {
   useEffect(() => {
     const physicalKeyEvent = (e) => {
       // console.log('key is', e.key.toUpperCase());
-      if (allowableKeys.includes(e.key)) {
-        // keyEvent(e.key.toUpperCase());
-        keyEvent(e.key);
+      // if (allowableKeys.includes(e.key)) {
+      //   // keyEvent(e.key.toUpperCase());
+      //   keyEvent(e.key);
 
-        // FOR KEY PRESSES, action.payload = LETTER (e.key)
-        
-      }
-      console.log(123)
-      if (letters.includes(e.key)) dispatch({type: action.keyEventLetter, payload: e.key})
-      if (e.key === 'Backspace' ) dispatch({type: action.keyEventDelete, payload: e.key})
-      if (e.key === 'Enter' ) dispatch({type: action.endTurn, payload: e.key})
+      //   // FOR KEY PRESSES, action.payload = LETTER (e.key)
+
+      // }
+      // console.log(123);
+      if (state.gameOver) return;
+      if (letters.includes(e.key))
+        dispatch({ type: action.keyEventLetter, payload: e.key });
+      if (e.key === 'Backspace')
+        dispatch({ type: action.keyEventDelete, payload: e.key });
+      if (e.key === 'Enter') dispatch({ type: action.endTurn, payload: e.key });
     };
     // TODO: might be able to remove avove check for inclusion in allowable keys list
 
@@ -58,10 +60,18 @@ export default function Keyboard({ state, dispatch, keyColors, keyEvent }) {
   });
 
   const clickHandler = (e) => {
-    keyEvent(e.target.innerText);
-
+    // keyEvent(e.target.innerText);
+    // let key = 'a'
     // reducer...
-    
+    if (state.gameOver) return;
+    const pressedKey = e.target.innerText.toLowerCase();
+    // console.log(pressedKey)
+    // console.log(letters)
+    if (letters.includes(pressedKey))
+      dispatch({ type: action.keyEventLetter, payload: pressedKey });
+    if (pressedKey === 'del')
+      dispatch({ type: action.keyEventDelete, payload: pressedKey });
+    if (pressedKey === 'enter') dispatch({ type: action.endTurn, payload: pressedKey });
   };
 
   return (
@@ -74,7 +84,8 @@ export default function Keyboard({ state, dispatch, keyColors, keyEvent }) {
                 <div
                   key={key}
                   className={`keyboard-key ${key.toLowerCase()} ${
-                    keyColors[key]
+                    // keyColors[key]
+                    state.keyColors[key]
                   }`}
                   onClick={clickHandler}
                 >
@@ -87,6 +98,4 @@ export default function Keyboard({ state, dispatch, keyColors, keyEvent }) {
       </div>
     </div>
   );
-};
-
-
+}

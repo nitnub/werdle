@@ -14,7 +14,7 @@ import GameOver from '../src/components/GameOver';
 import SettingsBar from './components/SettingsBar';
 import getWordOfLength from './utils/getWordOfLength';
 // import Header from './components/Header'
-
+import { action } from './context/defaultState';
 const defaultLength = 5;
 const defaultGuesses = 6;
 
@@ -48,7 +48,7 @@ function App() {
   const [outcome, setOutcome] = useState(0);
 
   // Settings Bar
-  const [length, setLength] = useState(defaultLength);
+  const [wordLength, setWordLength] = useState(defaultLength);
   const [guesses, setGuesses] = useState(defaultGuesses);
 
   // Reducer State
@@ -60,16 +60,16 @@ function App() {
   }, []);
 
   const getRoundIndex = () => {
-    return Math.floor(globalIndex / length);
+    return Math.floor(globalIndex / wordLength);
   };
 
   const finalLetter = () => {
     if (globalIndex === 0) return false;
-    return globalIndex % length === 0;
+    return globalIndex % wordLength === 0;
   };
 
   const wordIndex = () => {
-    return globalIndex % length;
+    return globalIndex % wordLength;
   };
 
   const allowDelete = () => {
@@ -93,8 +93,8 @@ function App() {
 
   const resetGame = async () => {
     console.log('reset game!');
-    setSolution(await getWordOfLength(length));
-    setBoard(createBoard(length, guesses));
+    setSolution(await getWordOfLength(wordLength));
+    setBoard(createBoard(wordLength, guesses));
 
     setRoundOver(false);
     setKeyColors(defaultKeyColors);
@@ -109,114 +109,121 @@ function App() {
 
   useEffect(() => {
     async function update() {
-      setSolution(await getWordOfLength(length));
+      setSolution(await getWordOfLength(wordLength));
+      const word = await getWordOfLength(state.wordLength)
+      // dispatch({type: 'SET_NEW_SOLUTION', payload: await getWordOfLength(state.wordLength)})
+      dispatch({type: 'SET_NEW_SOLUTION', payload: word})
+      console.log('WORD:', word)
     }
     update();
-  }, []);
+  }, [state.wordLength]);
 
-  const checkGameOver = () => {
-    // Now that the round is over, check the (now previous) round for game over state
+  // const checkGameOver = () => {
+  //   // Now that the round is over, check the (now previous) round for game over state
 
-    const response = board[getRoundIndex() - 1].join('');
+  //   const response = board[getRoundIndex() - 1].join('');
 
-    if (solution === response) {
-      setGameOver(true);
-      setOutcome(1);
-      setModalVisible(() => true);
-    } else if (getRoundIndex() === guesses) {
-      setGameOver(true);
-      setOutcome(2);
-      setModalVisible(() => true);
-    }
-  };
+  //   if (solution === response) {
+  //     setGameOver(true);
+  //     setOutcome(1);
+  //     setModalVisible(() => true);
+  //   } else if (getRoundIndex() === guesses) {
+  //     setGameOver(true);
+  //     setOutcome(2);
+  //     setModalVisible(() => true);
+  //   }
+  // };
 
-  const keyEvent = (letter) => {
-    console.log('letter coming in is !...', letter);
-    if (wordIndex() >= 1) setSameRound(() => false);
+  // const keyEvent = (letter) => {
+  //   console.log('letter coming in is !...', letter);
+  //   if (wordIndex() >= 1) setSameRound(() => false);
 
-    if (gameOver) return;
+  //   if (gameOver) return;
 
-    switch (letter) {
-      case 'Enter': {
-        setSameRound(() => true);
-        if (finalLetter()) {
-          // Put reducer in this if block, not outside!
-          console.log('final enter!');
-          setRoundOver(() => true);
-          updateKeyColors();
-          checkGameOver(); // keep this separate, not a part of END_TURN reducer
-        }
-        break;
-      }
-      case 'Del':
-      case 'Backspace': {
-        if (allowDelete()) {
-          const boardCopy = [...board];
+  //   switch (letter) {
+  //     case 'Enter': {
+  //       setSameRound(() => true);
+  //       if (finalLetter()) {
+  //         // Put reducer in this if block, not outside!
+  //         console.log('final enter!');
+  //         setRoundOver(() => true);
+  //         updateKeyColors();
+  //         checkGameOver(); // keep this separate, not a part of END_TURN reducer
+  //       }
+  //       break;
+  //     }
+  //     case 'Del':
+  //     case 'Backspace': {
+  //       if (allowDelete()) {
+  //         const boardCopy = [...board];
 
-          const previousIndex = Math.max(0, globalIndex - 1);
+  //         const previousIndex = Math.max(0, globalIndex - 1);
 
-          if (wordIndex() === 0 && !sameRound) {
-            boardCopy[getRoundIndex() - 1][length - 1] = ' ';
-            setGlobalIndex(() => previousIndex);
-          } else {
-            boardCopy[getRoundIndex()][wordIndex() - 1] = ' ';
-            setGlobalIndex(() => previousIndex);
-          }
+  //         if (wordIndex() === 0 && !sameRound) {
+  //           boardCopy[getRoundIndex() - 1][wordLength - 1] = ' ';
+  //           setGlobalIndex(() => previousIndex);
+  //         } else {
+  //           boardCopy[getRoundIndex()][wordIndex() - 1] = ' ';
+  //           setGlobalIndex(() => previousIndex);
+  //         }
 
-          setBoard(boardCopy);
-          setSameRound(() => true);
-        }
+  //         setBoard(boardCopy);
+  //         setSameRound(() => true);
+  //       }
 
-        break;
-      }
-      case letter.match(/^[a-zA-Z]$/)?.input: {
-        if (sameRound) {
-          console.log('letter matches:', letter);
-          const boardCopy = [...board];
-          if (boardCopy[getRoundIndex()][wordIndex()] === ' ') {
-            boardCopy[getRoundIndex()][wordIndex()] = letter.toUpperCase();
-          }
-          setBoard(boardCopy);
+  //       break;
+  //     }
+  //     case letter.match(/^[a-zA-Z]$/)?.input: {
+  //       if (sameRound) {
+  //         console.log('letter matches:', letter);
+  //         const boardCopy = [...board];
+  //         if (boardCopy[getRoundIndex()][wordIndex()] === ' ') {
+  //           boardCopy[getRoundIndex()][wordIndex()] = letter.toUpperCase();
+  //         }
+  //         setBoard(boardCopy);
 
-          if (sameRound) {
-            setGlobalIndex(() => globalIndex + 1);
-          }
-          if (globalIndex > 0 && wordIndex() === length - 1) {
-            setSameRound(() => false);
-          }
-          if (globalIndex > 0 && wordIndex() < length - 1) {
-            setSameRound(() => true);
-          }
-        }
-        break;
-      }
-      default:
-        console.log(letter);
-        setGlobalIndex(globalIndex);
-    }
-  };
+  //         if (sameRound) {
+  //           setGlobalIndex(() => globalIndex + 1);
+  //         }
+  //         if (globalIndex > 0 && wordIndex() === wordLength - 1) {
+  //           setSameRound(() => false);
+  //         }
+  //         if (globalIndex > 0 && wordIndex() < wordLength - 1) {
+  //           setSameRound(() => true);
+  //         }
+  //       }
+  //       break;
+  //     }
+  //     default:
+  //       console.log(letter);
+  //       setGlobalIndex(globalIndex);
+  //   }
+  // };
 
-  const updateKeyColors = () => {
-    const solutionArray = solution.split('');
-    let tempKeys = {};
+  // const updateKeyColors = () => {
+  //   const solutionArray = solution.split('');
+  //   let tempKeys = {};
 
-    board[getRoundIndex() - 1].forEach((guess, index) => {
-      if (keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')
-        return;
-      if (guess === solutionArray[index]) {
-        tempKeys = { ...tempKeys, [guess]: 'correct' };
-      } else if (solution.indexOf(guess) >= 0) {
-        tempKeys = { ...tempKeys, [guess]: 'close' };
-      } else {
-        tempKeys = { ...tempKeys, [guess]: 'incorrect' };
-      }
-      setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
-    });
-  };
+  //   board[getRoundIndex() - 1].forEach((guess, index) => {
+  //     if (keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')
+  //       return;
+  //     if (guess === solutionArray[index]) {
+  //       tempKeys = { ...tempKeys, [guess]: 'correct' };
+  //     } else if (solution.indexOf(guess) >= 0) {
+  //       tempKeys = { ...tempKeys, [guess]: 'close' };
+  //     } else {
+  //       tempKeys = { ...tempKeys, [guess]: 'incorrect' };
+  //     }
+  //     setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
+  //   });
+  // };
+  const hideModal = () => {
+    dispatch({type: action.updateModalVisible, payload: false})
+  }
 
   const settingsProps = {
     defaultLength,
-    setLength,
+    setWordLength,
     defaultGuesses,
     setGuesses,
     resetGame,
@@ -225,17 +232,18 @@ function App() {
   return (
     <>
       <div className="content">
-        <Header resetGame={resetGame} settings={settingsProps} />
+        <Header resetGame={resetGame} settings={settingsProps} state={state} dispatch={dispatch}/>
         <GameOver
-          show={modalVisible}
-          onHide={() => setModalVisible(false)}
-          outcome={outcome}
-          solution={solution}
+          show={state.modalVisible}
+          // onHide={() => setModalVisible(false)}
+          onHide={hideModal}
+          outcome={state.outcome}
+          solution={state.solution}
         />
 
         <div className="game-container">
           <div className="settings desktop-only">
-            <SettingsBar settings={settingsProps} />
+            <SettingsBar state={state} dispatch={dispatch}/>
           </div>
           <Board state={state} dispatch={dispatch} />
           {/* <div id="game-board" className="game-board">
@@ -259,7 +267,7 @@ function App() {
           state={state}
           dispatch={dispatch}
           keyColors={keyColors}
-          keyEvent={keyEvent}
+          // keyEvent={keyEvent}
         />
         {/* <Keyboard state={state} dispatch={dispatch} keyColors={keyColors} keyEvent={keyEvent} /> */}
         {/* <Footer /> */}

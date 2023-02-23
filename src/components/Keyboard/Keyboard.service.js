@@ -71,7 +71,7 @@ export const updateKeyColors = (state) => {
   //   return Math.floor(globalIndex / length);
   // };
   
-  const roundIndex = Math.floor(state.globalIndex / state.length);
+  const roundIndex = Math.floor(state.globalIndex / state.wordLength);
 
   state.board[roundIndex - 1].forEach((guess, index) => {
     if (state.keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')

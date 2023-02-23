@@ -4,17 +4,15 @@ import defaultState from './defaultState';
 import { updateKeyColors } from '../utils/updateKeyColors';
 import getWordOfLength from '../utils/getWordOfLength';
 
-
-
-
-
 export const action = {
   resetGame: 'RESET_GAME',
-  getNewSolution: 'GET_NEW_SOLUTION',
+  setNewSolution: 'SET_NEW_SOLUTION',
   checkGameOver: 'CHECK_GAME_OVER',
   updateSameRound: 'UPDATE_SAME_ROUND',
   updateRoundOver: 'UPDATE_ROUND_OVER',
-  // keyEventEnter: 'KEY_EVENT_ENTER',
+  updateModalVisible: 'UPDATE_MODAL_VISIBLE',
+  updateMaxGuesses: 'UPDATE_MAX_GUESSES',
+  updateWordLength: 'UPDATE_WORD_LENGTH',
   keyEventDelete: 'KEY_EVENT_DELETE',
   keyEventLetter: 'KEY_EVENT_LETTER',
   endTurn: 'END_TURN',
@@ -22,21 +20,21 @@ export const action = {
 };
 
 const gameStateReducer = (state, action) => {
-  console.info('Accessing reducer with the following data:');
-  console.log(`     state:`, state);
-  console.log(`     action:`, action);
+  // console.info('Accessing reducer with the following data:');
+  // console.log(`     state:`, state);
+  // console.log(`     action:`, action);
 
   const getRoundIndex = () => {
-    return Math.floor(state.globalIndex / state.length);
+    return Math.floor(state.globalIndex / state.wordLength);
   };
 
   const finalLetter = () => {
     if (state.globalIndex === 0) return false;
-    return state.globalIndex % state.length === 0;
+    return state.globalIndex % state.wordLength === 0;
   };
 
   const wordIndex = () => {
-    return state.globalIndex % state.length;
+    return state.globalIndex % state.wordLength;
   };
 
   const allowDelete = () => {
@@ -61,6 +59,12 @@ const gameStateReducer = (state, action) => {
   };
 
   switch (action.type) {
+    case 'SET_NEW_SOLUTION':
+      return {
+        ...state,
+        solution: action.payload,
+      };
+
     case 'RESET_GAME':
       const removeClasses = (str, classArray) => {
         const elementArray = document.getElementsByClassName(str);
@@ -75,8 +79,8 @@ const gameStateReducer = (state, action) => {
       resetBoxes();
       return {
         // ...state,
-        // solution: await getWordOfLength(state.length),
-        // board: createBoard(state.length, state.guesses),
+        // solution: await getWordOfLength(state.wordLength),
+        // board: createBoard(state.wordLength, state.guesses),
         // roundOver: false,
         // keyColors: defaultKeyColors,
         // globalIndex: 0,
@@ -84,7 +88,8 @@ const gameStateReducer = (state, action) => {
         // gameOver: false,
         // outcome: 0,
         ...defaultState,
-        length: state.length,
+
+        length: state.wordLength,
         gueses: state.guesses,
       };
 
@@ -104,7 +109,6 @@ const gameStateReducer = (state, action) => {
       let endTurnState = { ...state, sameRound: true };
 
       const keyColors = updateKeyColors(state);
-
       if (finalLetter()) {
         endTurnState = {
           ...endTurnState,
@@ -119,6 +123,8 @@ const gameStateReducer = (state, action) => {
     case 'CHECK_GAME_OVER':
       const response = state.board[getRoundIndex() - 1].join('');
       const goState = endTurnState ? endTurnState : { ...state };
+      console.log('Checking game over with response:', response);
+      console.log('Checking game over with game over state:', goState);
       if (state.solution === response) {
         return {
           ...goState,
@@ -128,13 +134,28 @@ const gameStateReducer = (state, action) => {
         };
       } else if (getRoundIndex() === state.guesses) {
         return {
-          ...state,
+          ...goState,
           gameOver: true,
           outcome: 2,
           modalVisible: true,
         };
       }
-      break;
+      return {
+        ...goState,
+      };
+
+    case 'UPDATE_MAX_GUESSES':
+      return {
+        ...state,
+        guesses: action.payload,
+      };
+
+    case 'UPDATE_WORD_LENGTH':
+      return {
+        ...state,
+        wordLength: action.payload,
+      };
+
     case 'UPDATE_SAME_ROUND':
       return {
         ...state,
@@ -148,17 +169,21 @@ const gameStateReducer = (state, action) => {
         const previousIndex = Math.max(0, state.globalIndex - 1);
 
         if (wordIndex() === 0 && !state.sameRound) {
-          boardCopy[getRoundIndex() - 1][state.length - 1] = ' ';
+          boardCopy[getRoundIndex() - 1][state.wordLength - 1] = ' ';
         } else {
           boardCopy[getRoundIndex()][wordIndex() - 1] = ' ';
         }
 
         return {
+          ...state,
           board: boardCopy,
           globalIndex: previousIndex,
           sameRound: true,
         };
       }
+      return {
+        ...state,
+      };
       break;
     case 'KEY_EVENT_LETTER':
       if (state.sameRound) {
@@ -177,11 +202,11 @@ const gameStateReducer = (state, action) => {
           // setGlobalIndex(() => globalIndex + 1);
           newProps = { ...newProps, globalIndex: state.globalIndex + 1 };
         }
-        if (state.globalIndex > 0 && wordIndex() === state.length - 1) {
+        if (state.globalIndex > 0 && wordIndex() === state.wordLength - 1) {
           // setSameRound(() => false);
           newProps = { ...newProps, sameRound: false };
         }
-        if (state.globalIndex > 0 && wordIndex() < state.length - 1) {
+        if (state.globalIndex > 0 && wordIndex() < state.wordLength - 1) {
           // setSameRound(() => true);
           newProps = { ...newProps, sameRound: true };
         }
@@ -190,13 +215,16 @@ const gameStateReducer = (state, action) => {
           ...newProps,
         };
       }
+      return {
+        ...state,
+      };
       break;
 
     case 'UPDATE_KEY_COLORS':
       const solutionArray = state.solution.split('');
       let tempKeys = {};
 
-      const roundIndex = getRoundIndex(state.globalIndex, state.length);
+      const roundIndex = getRoundIndex(state.globalIndex, state.wordLength);
 
       state.board[roundIndex - 1].forEach((guess, index) => {
         if (
@@ -220,6 +248,12 @@ const gameStateReducer = (state, action) => {
         };
       });
       break;
+
+    case 'UPDATE_MODAL_VISIBLE':
+      return {
+        ...state,
+        modalVisible: action.payload,
+      };
     //////////////////////////////////////////////////////////////
     case 'FETCH_INIT':
       return {

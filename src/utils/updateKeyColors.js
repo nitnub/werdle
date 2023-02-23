@@ -1,12 +1,16 @@
 export const updateKeyColors = (state) => {
   const solutionArray = state.solution.split('');
-  let tempKeys = {};
+  console.log('state.solution')
+  console.log(state.solution)
+  // let tempKeys = {};
+  let tempKeys = state.keyColors;
   // const getRoundIndex = (globalIndex, length) => {
   //   return Math.floor(globalIndex / length);
   // };
-  
-  const roundIndex = Math.floor(state.globalIndex / state.length);
 
+  const roundIndex = Math.floor(state.globalIndex / state.wordLength);
+  // const Math.max(roundIndex -1, 0)
+  // console.log("ri:", roundIndex)
   state.board[roundIndex - 1].forEach((guess, index) => {
     if (state.keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')
       return;
@@ -18,6 +22,9 @@ export const updateKeyColors = (state) => {
       tempKeys = { ...tempKeys, [guess]: 'incorrect' };
     }
     // setKeyColors((keyColors) => ({ ...keyColors, ...tempKeys }));
-    return { ...state.keyColors, ...tempKeys };
+    // tempKeys = { ...tempKeys, ...state.keyColors };
+    // return { ...state.keyColors, ...tempKeys };
   });
+
+  return tempKeys;
 };

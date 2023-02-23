@@ -1,8 +1,7 @@
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import SettingsBar from '../SettingsBar';
 
-
-export default function Header({ resetGame, settings }) {
+export default function Header({ resetGame, settings, state, dispatch }) {
   return (
     <Navbar className="header" expand="md">
       <div className="header-spacer"></div>
@@ -23,6 +22,8 @@ export default function Header({ resetGame, settings }) {
               <SettingsBar
                 className="drawer-settings drawer-only"
                 settings={settings}
+                state={state}
+                dispatch={dispatch}
               />
             </div>
 
