@@ -39,9 +39,9 @@ export default function Row({
 
   useEffect(() => {
     // Only check the most recent round and those that came before it
-    console.log('thisround is over', state.roundOver);
-    console.log('thisround is over', id);
-    console.log('thisround is over', state.roundIndex);
+    // console.log('thisround is over', state.roundOver);
+    // console.log('thisround is over', id);
+    // console.log('thisround is over', state.roundIndex);
     const roundIndex = Math.floor(state.globalIndex / state.wordLength);
     if (state.roundOver && id < roundIndex) {
       // setSameRound(() => true);

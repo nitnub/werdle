@@ -10,9 +10,7 @@ export default function Box({
   const getColorClass = (letter, index, solution) => {
     const correctLetter = solution.slice(index, index + 1);
     const correctLetterIndex = solution.split('').indexOf(letter);
-    console.log('correct letter:', correctLetter);
-    console.log(' letter:', letter);
-    console.log();
+
     if (correctLetter === letter) {
       return 'correct';
     } else if (correctLetterIndex >= 0) {
@@ -21,7 +19,7 @@ export default function Box({
       return 'incorrect';
     }
   };
-  console.log('box solution:', state.solution);
+
   return (
     <div
       id={`box${index}`}

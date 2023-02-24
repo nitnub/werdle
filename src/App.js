@@ -14,7 +14,7 @@ import GameOver from '../src/components/GameOver';
 import SettingsBar from './components/SettingsBar';
 import getWordOfLength from './utils/getWordOfLength';
 // import Header from './components/Header'
-import { action } from './context/defaultState';
+import { action } from './context/gameStateReducer';
 const defaultLength = 5;
 const defaultGuesses = 6;
 
@@ -54,10 +54,10 @@ function App() {
   // Reducer State
   const [state, dispatch] = useReducer(gameStateReducer, defaultState);
 
-  useEffect(() => {
-    dispatch({ type: 'FETCH_SUCCESS', payload: 'test' });
-    console.log(state.board);
-  }, []);
+  // useEffect(() => {
+  //   dispatch({ type: 'FETCH_SUCCESS', payload: 'test' });
+  //   console.log(state.board);
+  // }, []);
 
   const getRoundIndex = () => {
     return Math.floor(globalIndex / wordLength);

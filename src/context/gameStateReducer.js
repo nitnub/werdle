@@ -1,5 +1,5 @@
 /*eslint no-fallthrough: ["error", { "commentPattern": "break[\\s\\w]*omitted" }]*/
-import defaultState from './defaultState';
+import defaultState, { createBoard } from './defaultState';
 // import { updateKeyColors } from '../components/Keyboard/Keyboard.service';
 import { updateKeyColors } from '../utils/updateKeyColors';
 import getWordOfLength from '../utils/getWordOfLength';
@@ -77,20 +77,13 @@ const gameStateReducer = (state, action) => {
         removeClasses('box', ['correct', 'incorrect', 'close']);
       };
       resetBoxes();
+      
       return {
-        // ...state,
-        // solution: await getWordOfLength(state.wordLength),
-        // board: createBoard(state.wordLength, state.guesses),
-        // roundOver: false,
-        // keyColors: defaultKeyColors,
-        // globalIndex: 0,
-        // sameRound: true,
-        // gameOver: false,
-        // outcome: 0,
         ...defaultState,
-
-        length: state.wordLength,
-        gueses: state.guesses,
+        solution: action.payload.newWord,
+        board: createBoard(action.payload.wordLength, action.payload.guesses),
+        wordLength: action.payload.wordLength,
+        guesses: action.payload.guesses,
       };
 
     case 'UPDATE_ROUND_OVER':
@@ -107,6 +100,8 @@ const gameStateReducer = (state, action) => {
 
     case 'END_TURN':
       let endTurnState = { ...state, sameRound: true };
+
+      if (getRoundIndex() < 1) return state;
 
       const keyColors = updateKeyColors(state);
       if (finalLetter()) {
@@ -255,25 +250,15 @@ const gameStateReducer = (state, action) => {
         modalVisible: action.payload,
       };
     //////////////////////////////////////////////////////////////
-    case 'FETCH_INIT':
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-      };
-    case 'FETCH_SUCCESS':
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        data: action.payload,
-      };
-    case 'FETCH_FAILURE':
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-      };
+  
+    // case 'FETCH_SUCCESS':
+    //   return {
+    //     ...state,
+    //     isLoading: false,
+    //     isError: false,
+    //     data: action.payload,
+    //   };
+
     default:
       throw new Error();
   }

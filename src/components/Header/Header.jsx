@@ -1,12 +1,21 @@
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import SettingsBar from '../SettingsBar';
+import getWordOfLength from '../../utils/getWordOfLength';
 
 export default function Header({ resetGame, settings, state, dispatch }) {
+
+  const resetHandler = async () => {
+    const newWord = await getWordOfLength(state.wordLength)
+    const payload = {newWord, wordLength: state.wordLength, guesses: state.guesses}
+    dispatch({type: 'RESET_GAME', payload})
+  }
+
   return (
     <Navbar className="header" expand="md">
       <div className="header-spacer"></div>
       <div className="header-section">
-        <div className="title" onClick={resetGame}>
+        {/* <div className="title" onClick={resetGame}> */}
+        <div className="title" onClick={resetHandler}>
           Werdle!
         </div>
       </div>
