@@ -3,7 +3,6 @@ export default function Box({
   state,
   letter,
   boxHeight,
-  solution,
   thisRoundIsOver,
 
 }) {
@@ -24,7 +23,6 @@ export default function Box({
     <div
       id={`box${index}`}
       className={`box  ${
-        // thisRoundIsOver && getColorClass(letter, index, state.solution)
         thisRoundIsOver && getColorClass(letter, index, state.solution)
       }`}
       style={{ width: boxHeight, fontSize: `${boxHeight * 0.6}px` }} // Adjust font size to fit box

@@ -15,7 +15,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test2": "react-scripts test -- --config ./jest.config.js",
+    "test3": "react-scripts test -- --config ./jest.config.js",
+    "test": "jest --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -37,6 +39,12 @@
     ]
   },
   "devDependencies": {
+    "jest": "^29.4.3",
+    "jest-config": "^29.4.3",
+    "jest-environment-jsdom": "^29.4.3",
+    "jest-puppeteer": "^7.0.1",
+    "puppeteer": "^19.7.2",
+    "puppeteer-core": "^19.7.2",
     "web-vitals": "^2.1.4"
   }
 }

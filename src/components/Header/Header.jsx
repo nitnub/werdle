@@ -2,13 +2,16 @@ import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import SettingsBar from '../SettingsBar';
 import getWordOfLength from '../../utils/getWordOfLength';
 
-export default function Header({ resetGame, settings, state, dispatch }) {
-
+export default function Header({ state, dispatch }) {
   const resetHandler = async () => {
-    const newWord = await getWordOfLength(state.wordLength)
-    const payload = {newWord, wordLength: state.wordLength, guesses: state.guesses}
-    dispatch({type: 'RESET_GAME', payload})
-  }
+    const newWord = await getWordOfLength(state.wordLength);
+    const payload = {
+      newWord,
+      wordLength: state.wordLength,
+      guesses: state.guesses,
+    };
+    dispatch({ type: 'RESET_GAME', payload });
+  };
 
   return (
     <Navbar className="header" expand="md">
@@ -30,7 +33,7 @@ export default function Header({ resetGame, settings, state, dispatch }) {
             <div className="drawer-settings drawer-only" disabled>
               <SettingsBar
                 className="drawer-settings drawer-only"
-                settings={settings}
+                // settings={settings}
                 state={state}
                 dispatch={dispatch}
               />

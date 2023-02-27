@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 
 export default function GameOver (props) {
   const { outcome, solution, onHide } = props;
+
   return (
     <>
       <Modal {...props} size="lg" centered>

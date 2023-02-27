@@ -2,6 +2,8 @@
 //   console.log('letter coming in is !...', letter);
 //   if (wordIndex() >= 1) setSameRound(() => false);
 
+import { getRoundIndex } from '../../context/game.helpers';
+
 //   if (gameOver) return;
 
 //   switch (letter) {
@@ -63,15 +65,15 @@
 //   }
 // };
 
-
 export const updateKeyColors = (state) => {
   const solutionArray = state.solution.split('');
   let tempKeys = {};
   // const getRoundIndex = (globalIndex, length) => {
   //   return Math.floor(globalIndex / length);
   // };
-  
-  const roundIndex = Math.floor(state.globalIndex / state.wordLength);
+
+  // const roundIndex = Math.floor(state.globalIndex / state.wordLength);
+  const roundIndex = getRoundIndex(state);
 
   state.board[roundIndex - 1].forEach((guess, index) => {
     if (state.keyColors[guess] === 'correct' || tempKeys[guess] === 'correct')

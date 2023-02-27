@@ -1,4 +1,7 @@
-import { createBoard } from "./game.helpers";
+import React from 'react';
+import { getByTestId, getByText, render} from '@testing-library/react'
+import SettingsBar from './SettingsBar';
+import { createBoard } from "../../context/game.helpers";
 
 const defaultKeyColors = {};
 const defaultLength = 5;
@@ -21,4 +24,13 @@ const defaultState = {
   guesses: defaultGuesses,
 };
 
-export default defaultState;
+
+
+
+test('renders test', () => {
+
+  const dispatch = () =>{}
+  const {getByText} = render(<SettingsBar state={defaultState} dispatch={dispatch}/>);
+ console.log(getByText)
+
+})
