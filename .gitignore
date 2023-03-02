@@ -15,6 +15,7 @@ words.test.json
 .local-resources
 .DS_Store
 /screenshots
+.env
 .env.local
 .env.development.local
 .env.test.local

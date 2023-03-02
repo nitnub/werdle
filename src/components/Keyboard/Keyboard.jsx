@@ -17,17 +17,19 @@ export default function Keyboard({ state, dispatch, keyEvent }) {
     String.fromCharCode(index + 97)
   );
 
-  allowableKeys.push('Enter');
-  allowableKeys.push('Backspace');
+  allowableKeys.push('enter');
+  allowableKeys.push('backspace');
 
   useEffect(() => {
     const physicalKeyEvent = (e) => {
       if (state.gameOver) return;
-      if (letters.includes(e.key))
-        dispatch({ type: action.keyEventLetter, payload: e.key });
-      if (e.key === 'Backspace')
-        dispatch({ type: action.keyEventDelete, payload: e.key });
-      if (e.key === 'Enter') dispatch({ type: action.endTurn, payload: e.key });
+      
+      const guess = e.key.toLowerCase();
+      if (letters.includes(guess))
+        dispatch({ type: action.keyEventLetter, payload: guess });
+      if (guess === 'backspace')
+        dispatch({ type: action.keyEventDelete, payload: guess });
+      if (guess === 'enter') dispatch({ type: action.endTurn, payload: guess });
     };
 
     window.addEventListener('keydown', physicalKeyEvent);

@@ -27,6 +27,7 @@ function App() {
     dispatch({ type: action.updateModalVisible, payload: false });
   };
 
+  console.log(state)
   return (
     <>
       <div className="content">
