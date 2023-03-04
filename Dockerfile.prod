@@ -14,7 +14,16 @@ COPY . /usr/src/werdle
 
 # ENV MONGO_CONNECTION_STRING mongodb_data_container:/data/db
 
+# Build 
+RUN npm run build
+
+FROM nginx:stable-alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# 80 is the default nginx port - need to use this?
+# EXPOSE 80
 EXPOSE 3601
 
-# Start
-CMD [ "npm", "start" ]
+# Final
+CMD ["nginx", "-g", "daemon off;"]
