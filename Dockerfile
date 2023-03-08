@@ -1,20 +1,30 @@
 FROM node:14-alpine AS builder
 
-# Create Directory for the Container
-WORKDIR /usr/src/werdle
+WORKDIR /app
 
-# Only copy the package.json file to work directory
-COPY package.json .
+COPY package.json ./
 
-# Install all Packages
-RUN npm install
+RUN npm install 
 
-# Copy all other source code to work directory
-COPY . /usr/src/werdle
+COPY . ./
 
-# ENV MONGO_CONNECTION_STRING mongodb_data_container:/data/db
+RUN npm run build
 
-EXPOSE 3601
+##########
+# Stage 2 
+##########
 
-# Start
-CMD [ "npm", "start" ]
+FROM nginx
+
+#copies React to the container directory
+# Set working directory to nginx resources directory
+WORKDIR /usr/share/nginx/html
+
+# Remove default nginx static resources
+RUN rm -rf ./*
+
+# Copies static resources from builder stage
+COPY --from=builder /app/build .
+
+# Containers run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
