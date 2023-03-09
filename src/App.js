@@ -18,7 +18,7 @@ function App() {
       const word = await getWordOfLength(state.wordLength);
 
       dispatch({ type: action.setNewSolution, payload: word });
-      console.log('WORD:', word);
+      // console.log('WORD:', word);
     }
     update();
   }, [state.wordLength]);
