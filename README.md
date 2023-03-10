@@ -1,8 +1,10 @@
 # Werdle - A Wordle Clone 
 
-This is a basic Wordle clone called Wordle. About this project:
-* Built with React, utilizing some Bootstrap styling for the Game Over modal
+A clone of the popular word game Wordle. Users can customize the word length and the number of turns allowed. In this version, guesses are not checked against the dictionary, so feel free to guess with a non-word! This project was built in React.
+* Choose a word length anywhere from 4 to 11 characters
+* Set the number of guesses fom 3 all the way up to 10
 * Utilizes over 2,300 words from the original game
+* Built with React, utilizing some Bootstrap styling for the Game Over modal
 * At this time, the layout is optimized for desktop, but I plan to add responsiveness in the future
 
 ## How to Run
@@ -13,7 +15,7 @@ To run this project, simply navigate to [https://nitnub.github.io/live-bus-track
 * Add responsiveness
 * Refactor Components
 * Update testing specs
-* Add refresh button to make getting a new word more intuitive
+* Link to custom "Secret Word" API
 * Add dark/light mode switch
 
 ##
