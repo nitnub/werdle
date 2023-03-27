@@ -1,5 +1,6 @@
 # Werdle - A Wordle Clone 
 
+
 A clone of the popular word game Wordle. Users can customize the word length and the number of turns allowed. In this version, guesses are not checked against the dictionary, so feel free to guess with a non-word! This project was built in React.
 * Choose a word length anywhere from 4 to 11 characters
 * Set the number of guesses fom 3 all the way up to 10
@@ -21,7 +22,7 @@ To run this project, simply navigate to [https://nitnub.github.io/live-bus-track
 ##
 -- Uses hamburger button from <a target="_blank" href="https://icons8.com/icon/k1Q9gcdbeRVn/hamburger-menu">hamburger menu</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
-## License Information
+## License Information (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
