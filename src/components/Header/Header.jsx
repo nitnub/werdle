@@ -1,4 +1,4 @@
-import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import SettingsBar from '../SettingsBar';
 import getWordOfLength from '../../utils/getWordOfLength';
 
@@ -17,7 +17,6 @@ export default function Header({ state, dispatch }) {
     <Navbar className="header" expand="md">
       <div className="header-spacer"></div>
       <div className="header-section">
-        {/* <div className="title" onClick={resetGame}> */}
         <div className="title" onClick={resetHandler}>
           Werdle!
         </div>
@@ -33,7 +32,6 @@ export default function Header({ state, dispatch }) {
             <div className="drawer-settings drawer-only" disabled>
               <SettingsBar
                 className="drawer-settings drawer-only"
-                // settings={settings}
                 state={state}
                 dispatch={dispatch}
               />

@@ -9,16 +9,15 @@ export default function Keyboard({ state, dispatch, keyEvent }) {
     ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Del'],
   ];
 
-
   const allowableKeys = [...Array(26)].map((elem, index) =>
     String.fromCharCode(index + 97)
   );
+  
   const letters = [...Array(26)].map((elem, index) =>
     String.fromCharCode(index + 97)
   );
 
-  allowableKeys.push('enter');
-  allowableKeys.push('backspace');
+  allowableKeys.push('enter', 'backspace');
 
   useEffect(() => {
     const physicalKeyEvent = (e) => {

@@ -1,6 +1,6 @@
 module.exports = {
   preset: 'jest-puppeteer',
-  globals: { URL: 'http://localhost:3000' },
+  globals: { URL: process.env.URL },
   verbose: false,
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
 };

@@ -29,7 +29,6 @@ export default function Row({ id, state, dispatch, round }) {
     const roundIndex = getRoundIndex(state);
     if (state.roundOver && id < roundIndex) {
       dispatch({ type: action.updateSameRound, payload: true });
-
       setThisRoundIsOver(() => true);
     }
     dispatch({ type: action.updateRoundOver, payload: false });

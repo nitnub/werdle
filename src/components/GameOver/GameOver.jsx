@@ -11,9 +11,9 @@ export default function GameOver (props) {
           <Modal.Title>{outcome === 1 ? 'You won!' : 'Almost!'}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-card">
-          <p>
-            {'The word was...'} <i>{solution?.toUpperCase()}</i>
-          </p>
+          {solution &&  <p>
+            {'The word was...'} <i>{solution.toUpperCase()}</i>
+          </p>}
         </Modal.Body>
         <Modal.Footer className="modal-card">
           <Button
@@ -29,5 +29,3 @@ export default function GameOver (props) {
     </>
   );
 };
-
-// export default GameOver;
