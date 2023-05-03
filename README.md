@@ -3,7 +3,7 @@
 
 A clone of the popular word game Wordle. Users can customize the word length and the number of turns allowed. In this version, guesses are no longer checked against the dictionary, so feel free to guess with a non-word! This project was built in React.
 * Choose a word length anywhere from 4 to 11 characters
-* Set the number of guesses fom 3 all the way up to 10
+* Set the number of guesses from 3 all the way up to 10
 * Utilizes over 2,300 words from the original game
 * Built with React, utilizing some Bootstrap styling for the Game Over modal
 * At this time, the layout is optimized for desktop, but I plan to enhance the responsiveness in the future
