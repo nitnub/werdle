@@ -507,11 +507,6 @@ describe('Reducer functionality', () => {
 
   describe('verifies game over state is...', () => {
     const gameOvertestCases = [
-      // [newGameState.testDescription, newGameState],
-      // [firstRoundOneLetterState.testDescription, firstRoundOneLetterState],
-
-      // [midGameFirstLetterState.testDescription, midGameFirstLetterState],
-      // [midGameMidLetterState.testDescription, midGameMidLetterState],
       [
         midGameLastLetterState.testDescription,
         midGameLastLetterState,
