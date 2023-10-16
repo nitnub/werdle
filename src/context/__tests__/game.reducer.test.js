@@ -262,6 +262,16 @@ describe('Reducer functionality', () => {
     },
   };
 
+  const testCases = [
+    newGameState,
+    firstRoundOneLetterState,
+    midGameFirstLetterState,
+    midGameMidLetterState,
+    midGameLastLetterState,
+    winningGameState,
+    losingGameState,
+  ];
+
   describe("raw reducer 'case' input tests...", () => {
     it('UPDATE_SAME_ROUND = False', () => {
       const expectedOutputFalse = {
@@ -361,16 +371,6 @@ describe('Reducer functionality', () => {
   });
 
   describe('game resets when state is...', () => {
-    const testCases = [
-      newGameState,
-      firstRoundOneLetterState,
-      midGameFirstLetterState,
-      midGameMidLetterState,
-      midGameLastLetterState,
-      winningGameState,
-      losingGameState,
-    ];
-
     each(testCases).it('$testDescription', (startState) => {
       const resizedBlankBoard = [
         [' ', ' ', ' ', ' ', ' ', ' '],
@@ -503,5 +503,107 @@ describe('Reducer functionality', () => {
 
       expect(newState).toEqual(expectedState);
     });
+  });
+
+  describe('verifies game over state is...', () => {
+    const gameOvertestCases = [
+      // [newGameState.testDescription, newGameState],
+      // [firstRoundOneLetterState.testDescription, firstRoundOneLetterState],
+
+      // [midGameFirstLetterState.testDescription, midGameFirstLetterState],
+      // [midGameMidLetterState.testDescription, midGameMidLetterState],
+      [
+        midGameLastLetterState.testDescription,
+        midGameLastLetterState,
+        {
+          roundOver: true,
+          sameRound: true,
+          keyColors: {
+            H: 'incorrect',
+            Y: 'incorrect',
+            Z: 'incorrect',
+            M: 'incorrect',
+            B: 'incorrect',
+            P: 'incorrect',
+            R: 'incorrect',
+            L: 'correct',
+            N: 'incorrect',
+            A: 'close',
+            G: 'incorrect',
+            F: 'incorrect',
+            Q: 'incorrect',
+            K: 'incorrect',
+          },
+        },
+      ],
+      [
+        winningGameState.testDescription,
+        winningGameState,
+        {
+          gameOver: true,
+          outcome: 1,
+          modalVisible: true,
+          roundOver: true,
+          sameRound: true,
+          keyColors: {
+            H: 'incorrect',
+            Y: 'incorrect',
+            Z: 'incorrect',
+            M: 'incorrect',
+            B: 'incorrect',
+            P: 'incorrect',
+            R: 'incorrect',
+            L: 'correct',
+            N: 'incorrect',
+            A: 'correct',
+            G: 'incorrect',
+            V: 'correct',
+            D: 'correct',
+            I: 'correct',
+          },
+        },
+      ],
+      [
+        losingGameState.testDescription,
+        losingGameState,
+        {
+          gameOver: true,
+          outcome: 2,
+          modalVisible: true,
+          roundOver: true,
+          sameRound: true,
+        },
+      ],
+    ];
+
+    each(gameOvertestCases).it('%s', (_, startState, stateChanges) => {
+      const stateCopy = JSON.parse(JSON.stringify(startState)); // structuredClone not available in this release
+      const expectedState = { ...stateCopy, ...stateChanges };
+
+      const newState = gameStateReducer(stateCopy, {
+        type: 'END_TURN',
+        // payload: 'M',
+      });
+
+      expect(newState).toEqual(expectedState);
+    });
+  });
+
+  it('throws error when given invalid operation', () => {
+    expect(() =>
+      gameStateReducer(winningGameState, {
+        type: 'INVALID_TYPE',
+      })
+    ).toThrowError('Invalid game operation.');
+    expect(() =>
+      gameStateReducer(123, {
+        type: 'INVALID_TYPE',
+      })
+    ).toThrowError('Invalid game operation.');
+    expect(() =>
+      gameStateReducer('aString', {
+        type: 'INVALID_TYPE',
+      })
+    ).toThrowError('Invalid game operation.');
   });
 });
