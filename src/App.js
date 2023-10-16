@@ -10,6 +10,7 @@ import SettingsBar from './components/SettingsBar';
 import getWordOfLength from './utils/getWordOfLength';
 import { action } from './context/game.actions';
 
+
 function App() {
   const [state, dispatch] = useReducer(gameStateReducer, defaultState);
 
@@ -17,8 +18,8 @@ function App() {
     async function update() {
       const word = await getWordOfLength(state.wordLength);
 
-      dispatch({ type: action.setNewSolution, payload: word });
-      // console.log('WORD:', word);
+      // dispatch({ type: action.setNewSolution, payload: word });
+      dispatch({ type: action.setNewSolution, payload: 'VALID' });
     }
     update();
   }, [state.wordLength]);
@@ -26,7 +27,6 @@ function App() {
   const hideModal = () => {
     dispatch({ type: action.updateModalVisible, payload: false });
   };
-
 
   return (
     <>

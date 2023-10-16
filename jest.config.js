@@ -1,8 +1,15 @@
+const baseDir = '<rootDir>/src';
+
 const config = {
   preset: 'jest-puppeteer',
-  globals: { URL: process.env.URL },
-  verbose: false,
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  testEnvironment: 'node',
+  globals: { URL: process.env.TEST_URL },
+  verbose: true,
+  collectCoverage: true,
+  collectCoverageFrom: [`${baseDir}/**/*.js`, `${baseDir}/**/*.js`],
+  coverageReporters: ['text'],
+  setupFilesAfterEnv: [`@testing-library/jest-dom/extend-expect`],
+  testMatch: [`${baseDir}/**/*.test.js`, `${baseDir}/**/*.test.js`],
 };
 
-export default config;
+module.exports = config;

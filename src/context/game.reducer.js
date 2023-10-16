@@ -141,7 +141,7 @@ const gameStateReducer = (state, action) => {
         ...state,
         modalVisible: action.payload,
       };
-      
+
     default:
       throw new Error('Invalid game operation.');
   }
