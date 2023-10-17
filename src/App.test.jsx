@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import Header from './components/Header';
 import resetHandler from './utils/resetHandler';
@@ -12,11 +12,13 @@ async function setup() {
   render(<App />);
 }
 
+beforeEach(() => {
+  setup();
+});
+
+afterEach(cleanup);
 describe('App test suite', () => {
   describe('renders...', () => {
-    beforeEach(() => {
-      setup();
-    });
     it('header', async () => {
       // const header = container.getElementsByClassName('header');
       const key = screen.getByText('Enter');
@@ -41,29 +43,20 @@ describe('App test suite', () => {
     it.todo('keyboard');
   });
 
-  describe('header', () => {
-    // shows buttons
-    // shows conditional settings?
-    // click to refresh
-    it('header test', () => {
 
 
-      const state = {
-        wordLength: 6,
-        guesses: 7,
-      };
-      render(<Header state={state} dispatch={dispatchMock} />);
-
-      const button = screen.getByText('Werdle!');
-      const title = screen.getByLabelText('title');
-
-      fireEvent.click(title);
-
-      expect(resetHandler).toHaveBeenCalled();
-    });
+  describe('settings', () => {
+    it.todo('displays all letter options (4-11)');
+    it.todo('displays all guess options (3-10)');
+    it.todo('updates board when letter count is updated');
+    it.todo('updates board when guesss value is updated');
   });
 
   describe('settings bar', () => {});
-  describe('game board', () => {});
-  describe('keyboard', () => {});
+
+  describe('game board', () => {
+    it.todo('displays a valid starting grid');
+  });
+
+
 });
