@@ -3,23 +3,15 @@ import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import styles from './SettingsBar.module.css';
 // import { action } from './context/game.reducer';
-import { action } from '../../context/game.actions';
-import getWordOfLength from '../../utils/getWordOfLength';
+import gameUpdateHandler from '../../utils/gameUpdateHandler';
 
 export default function SettingsBar({ state, dispatch }) {
-  const wordLengths = [4, 5, 6, 7, 8, 9, 10, 11];
+  const wordLengths = getRangeArray(4, 11);
   const guessRange = getRangeArray(3, 10);
   const [tempValues, setTempValues] = useState({
     wordLength: state.wordLength,
     guesses: state.guesses,
   });
-
-  const settingsHandler = async () => {
-    const newWord = await getWordOfLength(state.wordLength);
-    const payload = { ...tempValues, newWord };
-
-    dispatch({ type: action.resetGame, payload });
-  };
 
   return (
     <>
@@ -57,7 +49,7 @@ export default function SettingsBar({ state, dispatch }) {
         <Button
           className={styles.btn}
           variant="outline-dark"
-          onClick={settingsHandler}
+          onClick={() => gameUpdateHandler(state, dispatch, tempValues)}
         >
           Update
         </Button>
