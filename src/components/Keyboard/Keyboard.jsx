@@ -47,7 +47,7 @@ export default function Keyboard({ state, dispatch, keyEvent }) {
   };
 
   return (
-    <div className="keyboard-container">
+    <div data-testid="keyboard" className="keyboard-container">
       <div className="keyboard">
         {keyLayout.map((row) => {
           return (

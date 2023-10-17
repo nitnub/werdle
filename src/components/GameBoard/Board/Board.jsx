@@ -4,7 +4,7 @@ export default function Board({state, dispatch}) {
 
 
   return (
-    <div id="game-board" className="game-board">
+    <div data-testid="game-board" id="game-board" className="game-board">
       {state.board.map((round, index) => (
         <Row
           key={index}

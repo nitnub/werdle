@@ -10,7 +10,6 @@ import SettingsBar from './components/SettingsBar';
 import getWordOfLength from './utils/getWordOfLength';
 import { action } from './context/game.actions';
 
-
 function App() {
   const [state, dispatch] = useReducer(gameStateReducer, defaultState);
 
@@ -18,8 +17,7 @@ function App() {
     async function update() {
       const word = await getWordOfLength(state.wordLength);
 
-      // dispatch({ type: action.setNewSolution, payload: word });
-      dispatch({ type: action.setNewSolution, payload: 'VALID' });
+      dispatch({ type: action.setNewSolution, payload: word });
     }
     update();
   }, [state.wordLength]);
@@ -32,7 +30,7 @@ function App() {
     <>
       <div className="content">
         <Header state={state} dispatch={dispatch} />
-        <GameOver
+        <GameOver data-testid="game-over"
           show={state.modalVisible}
           onHide={hideModal}
           outcome={state.outcome}
@@ -40,12 +38,12 @@ function App() {
         />
 
         <div className="game-container">
-          <div className="settings desktop-only">
+          <div data-testid="settings-bar" className="settings desktop-only">
             <SettingsBar state={state} dispatch={dispatch} />
           </div>
-          <Board state={state} dispatch={dispatch} />
+          <Board  state={state} dispatch={dispatch} />
         </div>
-        <Keyboard state={state} dispatch={dispatch} />
+        <Keyboard data-testid="keyboard" state={state} dispatch={dispatch} />
       </div>
     </>
   );
