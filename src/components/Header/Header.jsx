@@ -1,32 +1,16 @@
 import { Nav, Navbar } from 'react-bootstrap';
 import SettingsBar from '../SettingsBar';
-import getWordOfLength from '../../utils/getWordOfLength';
-// import { resetHandler } from '../../utils/resetHandler';
+
 import resetHandler from '../../utils/resetHandler';
-// import { aaa } from '../../utils/resetHandler';
 
 export default function Header({ state, dispatch }) {
-  // const resetHandler = async () => {
-  //   const newWord = await getWordOfLength(state.wordLength);
-  //   const payload = {
-  //     newWord,
-  //     wordLength: state.wordLength,
-  //     guesses: state.guesses,
-  //   };
-  //   dispatch({ type: 'RESET_GAME', payload });
-  // };
-
-  //  resetresetHandler(state, dispatch);
-
   return (
     <Navbar data-testid="header" className="header" expand="md">
       <div className="header-spacer"></div>
       <div className="header-section">
-        {/* <div className="title" onClick={resetHandler}> */}
         <div
           aria-label="title"
           className="title"
-          // onClick={() => aaa.resetHandler(state, dispatch)}
           onClick={() => resetHandler(state, dispatch)}
         >
           Werdle!
@@ -75,13 +59,3 @@ export default function Header({ state, dispatch }) {
     </Navbar>
   );
 }
-
-// export const resetHandler = async (state, dispatch) => {
-//   const newWord = await getWordOfLength(state.wordLength);
-//   const payload = {
-//     newWord,
-//     wordLength: state.wordLength,
-//     guesses: state.guesses,
-//   };
-//   dispatch({ type: 'RESET_GAME', payload });
-// };
