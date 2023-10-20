@@ -125,6 +125,4 @@ describe('SettingsBar test suite', () => {
       }
     );
   });
-
-  describe('settings bar', () => {});
 });

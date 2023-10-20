@@ -5,7 +5,7 @@ import resetHandler from '../../utils/resetHandler';
 
 export default function Header({ state, dispatch }) {
   return (
-    <Navbar data-testid="header" className="header" expand="md">
+    <Navbar data-testid="app-header" className="header" expand="md">
       <div className="header-spacer"></div>
       <div className="header-section">
         <div
@@ -24,12 +24,16 @@ export default function Header({ state, dispatch }) {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
           <div className="nav">
-            <div className="drawer-settings drawer-only" disabled>
-              <SettingsBar
+            <div
+              data-testid="settings-bar-header"
+              className="drawer-settings drawer-only"
+              disabled
+            >
+              {/* <SettingsBar
                 className="drawer-settings drawer-only"
                 state={state}
                 dispatch={dispatch}
-              />
+              /> */}
             </div>
 
             <div className="external-links">

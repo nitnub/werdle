@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import styles from './SettingsBar.module.css';
-// import { action } from './context/game.reducer';
+
 import gameUpdateHandler from '../../utils/gameUpdateHandler';
 
 export default function SettingsBar({ state, dispatch }) {

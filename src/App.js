@@ -38,7 +38,7 @@ function App() {
         />
 
         <div className="game-container">
-          <div data-testid="settings-bar" className="settings desktop-only">
+          <div data-testid="settings-bar-main" className="settings desktop-only">
             <SettingsBar state={state} dispatch={dispatch} />
           </div>
           <Board  state={state} dispatch={dispatch} />

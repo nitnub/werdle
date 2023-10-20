@@ -35,7 +35,7 @@ export default function Row({ id, state, dispatch, round }) {
   }, [state.roundOver]);
 
   return (
-    <div className="row">
+    <div data-testid="game-row" className="row">
       {round.map((letter, index) => (
         <Box
           key={`b${index}`}

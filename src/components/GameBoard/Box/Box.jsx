@@ -4,7 +4,6 @@ export default function Box({
   letter,
   boxHeight,
   thisRoundIsOver,
-
 }) {
   const getColorClass = (letter, index, solution) => {
     const correctLetter = solution.slice(index, index + 1);
@@ -21,6 +20,7 @@ export default function Box({
 
   return (
     <div
+      data-testid="game-letter"
       id={`box${index}`}
       className={`box  ${
         thisRoundIsOver && getColorClass(letter, index, state.solution)
