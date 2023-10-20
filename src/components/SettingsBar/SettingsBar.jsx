@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import styles from './SettingsBar.module.css';
 
-import gameUpdateHandler from '../../utils/gameUpdateHandler';
+import gameUpdateHandler from './gameUpdateHandler';
 
 export default function SettingsBar({ state, dispatch }) {
   const wordLengths = getRangeArray(4, 11);

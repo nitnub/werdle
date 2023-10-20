@@ -4,10 +4,10 @@ import each from 'jest-each';
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SettingsBar from '..';
-import gameUpdateHandler from '../../../utils/gameUpdateHandler';
+import gameUpdateHandler from '../gameUpdateHandler';
 
 const dispatchMock = jest.fn();
-jest.mock('../../../utils/gameUpdateHandler');
+jest.mock('../gameUpdateHandler');
 
 const wordLength = 5;
 const guesses = 6;

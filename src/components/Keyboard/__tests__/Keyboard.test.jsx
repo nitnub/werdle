@@ -1,35 +1,28 @@
 /* eslint-disable testing-library/no-unnecessary-act */
 /* eslint-disable testing-library/no-node-access */
 import '@testing-library/jest-dom';
-import {
-  act,
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { KeyboardService } from '../Keyboard.service';
 
+import { act, cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Keyboard from '..';
+import each from 'jest-each';
 
 const dispatchMock = jest.fn();
-const defaultKeyColors = {};
-let container;
-const testState = {
-  // solution: 'VALID',
-  // board: blankBoard,
-  // roundOver: false,
-  keyColors: defaultKeyColors,
-  // globalIndex: 0,
-  // modalVisible: false,
-  // sameRound: true,
-  gameOver: false,
-  // outcome: 0,
-  // wordLength: defaultLength,
-  // guesses: defaultGuesses,
-};
+const keyClickHandlerSpy = jest.spyOn(
+  KeyboardService.prototype,
+  'keyClickHandler'
+);
 
-// const keyProps = { state: testState, dispatch: dispatchMock };
+const keyPressHandlerSpy = jest.spyOn(
+  KeyboardService.prototype,
+  'keyPressHandler'
+);
+
+const testState = {
+  keyColors: {},
+  gameOver: false,
+};
 
 async function setup() {
   render(<Keyboard state={testState} dispatch={dispatchMock} />);
@@ -43,7 +36,18 @@ afterEach(cleanup);
 
 describe('Keyboard test suite', () => {
   describe('keyboard', () => {
-    it('displays all keys', () => {});
+    it('displays all keys', () => {
+      const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const specialKeys = ['Del', 'Enter'];
+
+      validLetters.split('').forEach((key) => {
+        expect(screen.getByText(key)).toBeVisible();
+      });
+
+      specialKeys.forEach((key) => {
+        expect(screen.getByText(key)).toBeVisible();
+      });
+    });
     it.todo('adds letters to board');
     it.todo('deletes letters from board');
     it.todo('checks word');
@@ -51,31 +55,37 @@ describe('Keyboard test suite', () => {
     it.todo('shows losing modal with losing game board is submitted');
   });
 
-  it('calls the delete action on press of "Del" key', () => {
-    const label = 'Enter';
-    const key = screen.getByText(label);
-    // const key = screen.queryByText('Enter');
+  const uiKeyboardCases = ['A', 'B', 'Z', 'Del', 'Enter'];
+  each(uiKeyboardCases).it(
+    'calls the keyHandler when pressing %s on UI keyboard',
+    (label) => {
+      const key = screen.getByText(label);
+      const testEvent = {
+        target: {
+          innerText: label,
+        },
+      };
 
-    const testEvent = {
-      target: {
-        innerText: label,
-      },
-    };
-    act(() => {
-      userEvent.click(key, testEvent);
-      // userEvent.click(key.childNodes[0]);
-    });
+      act(() => {
+        userEvent.click(key, testEvent);
+      });
 
-    console.log('key.innerText');
-    console.log(key.target);
-    console.log('key.innerText');
+      expect(keyClickHandlerSpy).toHaveBeenCalledTimes(1);
+    }
+  );
 
-    expect(dispatchMock).toHaveBeenCalledTimes(2);
+  const physicalKeyboardCases = ['A', 'B', 'Z'];
+  each(physicalKeyboardCases).it(
+    'calls the keyHandler when pressing %s on physical keyboard',
+    (letter) => {
+      act(() => {
+        userEvent.keyboard(letter);
+      });
 
-    // const inputs = container.querySelectorAll('button');
-    // console.log('inputs');
-    // console.log(inputs);
-    // console.log('inputs');
-  });
-  it.todo('calls the enter action on press of "Enter" key');
+      expect(keyPressHandlerSpy).toHaveBeenCalledTimes(1);
+      expect(keyPressHandlerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ key: letter })
+      );
+    }
+  );
 });

@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { KeyboardService } from './Keyboard.service';
 
 export default function Keyboard({ state, dispatch }) {
-  const ks = new KeyboardService(state, dispatch);
-  const keyLayout = ks.getLayout();
+  const { getLayout, keyPressHandler, keyClickHandler } = new KeyboardService(
+    state,
+    dispatch
+  );
 
   useEffect(() => {
     const physicalKeyEvent = (e) => {
-      ks.keyPressHandler(e);
+      keyPressHandler(e);
     };
 
     window.addEventListener('keydown', physicalKeyEvent);
@@ -17,7 +19,7 @@ export default function Keyboard({ state, dispatch }) {
   return (
     <div data-testid="keyboard" className="keyboard-container">
       <div className="keyboard">
-        {keyLayout.map((row) => {
+        {getLayout().map((row) => {
           return (
             <div key={row[0]} className="keyboard-row">
               {row.map((key) => (
@@ -26,7 +28,7 @@ export default function Keyboard({ state, dispatch }) {
                   className={`keyboard-key ${key.toLowerCase()} ${
                     state.keyColors[key]
                   }`}
-                  onClick={ks.keyClickHandler}
+                  onClick={keyClickHandler}
                 >
                   {key}
                 </div>

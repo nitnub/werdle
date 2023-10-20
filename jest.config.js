@@ -6,6 +6,7 @@ const config = {
   testEnvironment: 'node',
   globals: { URL: process.env.TEST_URL },
   verbose: true,
+  restoreMocks: true,
   collectCoverage: true,
   // collectCoverageFrom: [`${baseDir}/**/*.js`, `${baseDir}/**/*.js`],
   collectCoverageFrom: [`${focusDir}.js`],
