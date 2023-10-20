@@ -15,7 +15,6 @@ export class KeyboardService {
     this.dispatch = dispatch;
   }
 
-
   keyPressHandler = (e) => {
     this.dispatchKeyEntry(e.key);
   };
@@ -69,4 +68,3 @@ export class KeyboardService {
     });
   };
 }
-
