@@ -29,11 +29,11 @@ export default function Header({ state, dispatch }) {
               className="drawer-settings drawer-only"
               disabled
             >
-              {/* <SettingsBar
+              <SettingsBar
                 className="drawer-settings drawer-only"
                 state={state}
                 dispatch={dispatch}
-              /> */}
+              />
             </div>
 
             <div className="external-links">

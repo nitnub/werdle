@@ -6,7 +6,6 @@ const defaultGuesses = 6;
 
 const game = createBoard(defaultLength, defaultGuesses);
 
-// export const defaultState = {
 const defaultState = {
   solution: '',
   board: game,
