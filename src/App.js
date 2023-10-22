@@ -12,6 +12,10 @@ import { action } from './context/game.actions';
 
 function App() {
   const [state, dispatch] = useReducer(gameStateReducer, defaultState);
+  // console.log('abc');
+  // console.log(state);
+  // console.log(defaultState.modalVisible ? 'Modla Visible!' : 'Not visible');
+  // console.log('abc');
 
   useEffect(() => {
     async function update() {
@@ -30,7 +34,7 @@ function App() {
     <>
       <div className="content">
         <Header state={state} dispatch={dispatch} />
-        <GameOver data-testid="game-over"
+        <GameOver
           show={state.modalVisible}
           onHide={hideModal}
           outcome={state.outcome}
@@ -38,10 +42,13 @@ function App() {
         />
 
         <div className="game-container">
-          <div data-testid="settings-bar-main" className="settings desktop-only">
+          <div
+            data-testid="settings-bar-main"
+            className="settings desktop-only"
+          >
             <SettingsBar state={state} dispatch={dispatch} />
           </div>
-          <Board  state={state} dispatch={dispatch} />
+          <Board state={state} dispatch={dispatch} />
         </div>
         <Keyboard data-testid="keyboard" state={state} dispatch={dispatch} />
       </div>

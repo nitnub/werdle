@@ -3,7 +3,7 @@ import each from 'jest-each';
 import '@testing-library/jest-dom';
 import gameStateReducer from '../game.reducer';
 
-describe('Reducer functionality', () => {
+describe('game.reducer test suite', () => {
   const defaultKeyColors = {};
   const defaultLength = 5;
   const defaultGuesses = 6;
@@ -381,6 +381,7 @@ describe('Reducer functionality', () => {
         [' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' '],
       ];
+
       const payload = {
         newWord: 'apples',
         wordLength: 6,

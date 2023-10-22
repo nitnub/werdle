@@ -1,12 +1,12 @@
-import { createBoard } from "./game.helpers";
+import { createBoard } from './game.helpers';
 
 const defaultKeyColors = {};
 const defaultLength = 5;
 const defaultGuesses = 6;
 
-
 const game = createBoard(defaultLength, defaultGuesses);
 
+// export const defaultState = {
 const defaultState = {
   solution: '',
   board: game,
