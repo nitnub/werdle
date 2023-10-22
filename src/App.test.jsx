@@ -5,7 +5,6 @@ import { act, cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import mockState from './context/defaultState';
-import { beforeEach } from 'node:test';
 
 jest.mock('./utils/getWordOfLength');
 jest.mock('./utils/resetHandler');
@@ -26,42 +25,19 @@ const losingOutcome = 2;
 const lengthDefault = 5;
 const guessDefault = 6;
 
-let gameBoard;
-let keyboard;
-let gameRows;
-let gameLetters;
-let updateButtonMain;
+let solution;
+let goMessage;
+let goCloseButton;
 
 let header;
-let settingsBar;
-
-let letterDropdown;
-let guessDropdownMain;
-
 let linkedInIcon;
 let gitIcon;
-
-let solution;
-
-let goMessage;
-
-let goCloseButton;
 
 async function setup() {
   render(<App />);
 
-  settingsBar = await screen.findByTestId('settings-bar-main');
-
-  gameBoard = await screen.findByTestId('game-board');
-  keyboard = await screen.findByTestId('keyboard');
-  gameRows = await screen.findAllByTestId('game-row');
   header = await screen.findByTestId('app-header');
 
-  letterDropdown = (await within(settingsBar).findAllByRole('combobox'))[0];
-  // const guessDropdownMain = (await within(settingsBar).findAllByRole('combobox'))[1];
-  updateButtonMain = await within(settingsBar).findByText('Update');
-
-  gameLetters = await screen.findAllByTestId('game-letter');
 }
 
 afterEach(() => {
@@ -75,37 +51,50 @@ describe('App test suite', () => {
       setup();
     });
 
-    it('header', () => {
-      linkedInIcon = within(header).getByTitle('Visit me on LinkedIn');
-      gitIcon = within(header).getByTitle('Visit my Github');
+    it('header', async () => {
+
+      const linkedInIcon = within(header).getByTitle('Visit me on LinkedIn');
+      const gitIcon = within(header).getByTitle('Visit my Github');
+
       expect(gitIcon).toBeVisible();
       expect(linkedInIcon).toBeVisible();
       expect(header).toHaveTextContent('Werdle!');
     });
 
     it('settings', async () => {
-      const guessDropdownMain = (await within(settingsBar).findAllByRole('combobox'))[1];
+      const settingsBar = await screen.findByTestId('settings-bar-main');
+      const updateButton = await within(settingsBar).findByText('Update');
+
+      const dropdowns = await within(settingsBar).findAllByRole('combobox');
+      const [letterDropdown, guessDropDown] = dropdowns;
 
       expect(letterDropdown).toBeVisible();
-      expect(guessDropdownMain).toBeVisible();
-      expect(updateButtonMain).toBeVisible();
+      expect(guessDropDown).toBeVisible();
+      expect(updateButton).toBeVisible();
     });
 
-    it('game board', () => {
+    it('game board', async () => {
+      const gameBoard = await screen.findByTestId('game-board');
+
       expect(gameBoard).toBeVisible();
     });
 
     it('keyboard', async () => {
+      const keyboard = await screen.findByTestId('keyboard');
+
       expect(keyboard).toBeVisible();
     });
   });
 
   describe('game board', () => {
-    beforeEach(async () => {
-      await setup();
+    beforeEach(() => {
+      setup();
     });
 
-    it('displays a valid starting grid', () => {
+    it('displays a valid starting grid', async () => {
+      const gameRows = await screen.findAllByTestId('game-row');
+      const gameLetters = await screen.findAllByTestId('game-letter');
+
       expect(gameRows).toHaveLength(guessDefault);
       expect(gameLetters).toHaveLength(lengthDefault * guessDefault);
     });
@@ -118,6 +107,7 @@ describe('App test suite', () => {
       mockState.modalVisible = true;
       mockState.solution = solution;
       mockState.outcome = outcome;
+      mockState.roundOver = true;
 
       render(<App />);
 

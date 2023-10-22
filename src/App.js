@@ -12,10 +12,6 @@ import { action } from './context/game.actions';
 
 function App() {
   const [state, dispatch] = useReducer(gameStateReducer, defaultState);
-  // console.log('abc');
-  // console.log(state);
-  // console.log(defaultState.modalVisible ? 'Modla Visible!' : 'Not visible');
-  // console.log('abc');
 
   useEffect(() => {
     async function update() {
