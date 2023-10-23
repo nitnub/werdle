@@ -44,7 +44,6 @@ export default function Row({ id, state, dispatch, round }) {
           letter={letter}
           boxHeight={boxHeight}
           thisRoundIsOver={thisRoundIsOver}
-          solution={state.solution}
         />
       ))}
     </div>

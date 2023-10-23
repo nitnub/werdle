@@ -28,16 +28,12 @@ const guessDefault = 6;
 let solution;
 let goMessage;
 let goCloseButton;
-
 let header;
-let linkedInIcon;
-let gitIcon;
 
 async function setup() {
   render(<App />);
 
   header = await screen.findByTestId('app-header');
-
 }
 
 afterEach(() => {
@@ -52,7 +48,6 @@ describe('App test suite', () => {
     });
 
     it('header', async () => {
-
       const linkedInIcon = within(header).getByTitle('Visit me on LinkedIn');
       const gitIcon = within(header).getByTitle('Visit my Github');
 
@@ -103,6 +98,7 @@ describe('App test suite', () => {
   describe('game over modal', () => {
     async function modalSetup(outcome) {
       solution = 'VALID';
+
       mockState.gameOver = true;
       mockState.modalVisible = true;
       mockState.solution = solution;
