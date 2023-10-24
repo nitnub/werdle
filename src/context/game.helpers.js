@@ -29,13 +29,11 @@ export const allowDelete = (state) => {
   return true;
 };
 
-const removeClasses = (str) => {
-  const elementArray = document.getElementsByClassName(str);
+
+export const resetBoxes = () => {
+  const elementArray = document.getElementsByClassName('box');
+
   for (let box of elementArray) {
     box.className = 'box undefined';
   }
-};
-
-export const resetBoxes = () => {
-  removeClasses('box');
 };

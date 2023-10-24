@@ -1,5 +1,5 @@
 import getWordOfLength from './getWordOfLength';
-
+import { action } from '../context/game.actions';
 export default async function resetHandler(state, dispatch) {
   const newWord = await getWordOfLength(state.wordLength);
   const payload = {
@@ -7,5 +7,5 @@ export default async function resetHandler(state, dispatch) {
     wordLength: state.wordLength,
     guesses: state.guesses,
   };
-  dispatch({ type: 'RESET_GAME', payload });
+  dispatch({ type: action.resetGame, payload });
 }

@@ -1,4 +1,3 @@
-// import { beforeEach } from 'node:test';
 import each from 'jest-each';
 import '@testing-library/jest-dom';
 import gameStateReducer from '../game.reducer';
@@ -204,7 +203,7 @@ describe('game.reducer test suite', () => {
         A: 'close',
         G: 'incorrect',
       },
-      globalIndex: 20,
+      globalIndex: 19,
       sameRound: false,
       testDescription: 'mid game, final letter',
     },
@@ -416,7 +415,7 @@ describe('game.reducer test suite', () => {
       [
         firstRoundOneLetterState.testDescription,
         firstRoundOneLetterState,
-        { globalIndex: 0 },
+        { globalIndex: 0, sameRound: true },
       ],
       [midGameFirstLetterState.testDescription, midGameFirstLetterState, {}],
       [
@@ -456,6 +455,11 @@ describe('game.reducer test suite', () => {
     const newMidIndex = midGameMidLetterState.globalIndex + 1;
 
     let validKeyEventTestCases = [
+      [
+        midGameLastLetterState.testDescription,
+        midGameLastLetterState,
+        { sameRound: false },
+      ],
       [
         newGameState.testDescription,
         newGameState,
@@ -512,7 +516,7 @@ describe('game.reducer test suite', () => {
         midGameLastLetterState.testDescription,
         midGameLastLetterState,
         {
-          roundOver: true,
+          roundOver: false,
           sameRound: true,
           keyColors: {
             H: 'incorrect',
@@ -526,9 +530,6 @@ describe('game.reducer test suite', () => {
             N: 'incorrect',
             A: 'close',
             G: 'incorrect',
-            F: 'incorrect',
-            Q: 'incorrect',
-            K: 'incorrect',
           },
         },
       ],
@@ -578,7 +579,6 @@ describe('game.reducer test suite', () => {
 
       const newState = gameStateReducer(stateCopy, {
         type: 'END_TURN',
-        // payload: 'M',
       });
 
       expect(newState).toEqual(expectedState);
