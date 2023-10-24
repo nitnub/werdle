@@ -1,5 +1,14 @@
+// import { types } from "util";
+
 // export function getColorClass(letter, index, solution) {
 export default function getColorClass(letter, index, solution) {
+  if (typeof letter !== 'string' || typeof solution != 'string') {
+    return 'incorrect';
+  }
+
+  letter = letter.toLowerCase();
+  solution = solution.toLowerCase();
+
   const correctLetter = solution.slice(index, index + 1);
   const correctLetterIndex = solution.split('').indexOf(letter);
 
@@ -7,7 +16,6 @@ export default function getColorClass(letter, index, solution) {
     return 'correct';
   } else if (correctLetterIndex >= 0) {
     return 'close';
-  } else {
-    return 'incorrect';
   }
+  return 'incorrect';
 }

@@ -1,57 +1,53 @@
 import '@testing-library/jest-dom';
-
-import { cleanup, render } from '@testing-library/react';
-import defaultState from '../../../../context/defaultState';
+import each from 'jest-each';
 import getColorClass from '../getColorClass';
 
-// const getColorClass = jest.requireActual('../getColorClass');
-// const getColorSpy = jest.spyOn(getColorClass, 'default');
+const correctCases = [
+  ['V', 'VALID', 0],
+  ['A', 'VALID', 1],
+  ['L', 'VALID', 2],
+  ['I', 'VALID', 3],
+  ['D', 'VALID', 4],
+  ['Y', 'ELEMENTARY', 9],
+];
 
-let sut;
+const closeCases = [
+  ['V', 'VALID', 1],
+  ['A', 'VALID', 4],
+  ['L', 'VALID', 0],
+  ['I', 'VALID', 2],
+  ['D', 'VALID', 3],
+  ['Y', 'ELEMENTARY', 0],
+];
 
-// function renderBox(roundOver) {
-//   defaultState.solution = 'VALID';
-//   letter = 'A';
-//   const index = 1;
-
-//   render(
-//     <Box
-//       key={`b${index}`}
-//       index={index}
-//       state={defaultState}
-//       letter={letter}
-//       boxHeight={26}
-//       thisRoundIsOver={roundOver}
-//     />
-//   );
-// }
-
-afterEach(() => {
-  cleanup();
-  jest.resetAllMocks();
-});
-
-let solution = 'VALID';
-let letter = 'A';
-let index;
+const incorrectCases = [
+  ['M', 'VALID', 1],
+  ['.', 'VALID', 4],
+  ['Z', 'VALID', 0],
+  [2, 'VALID', 1],
+  ['DB', 'VALID', 3],
+  ['*', 'ELEMENTARY', 5],
+];
 
 describe('getColorClas test suite', () => {
-  it("returns 'correct' on correct letter placement", () => {
-    index = 1;
+  each(correctCases).it(
+    "returns 'correct' for %s at %s[%i]",
+    (letter, solution, index) => {
+      expect(getColorClass(letter, index, solution)).toBe('correct');
+    }
+  );
 
-    expect(getColorClass(letter, index, solution)).toBe('correct');
-  });
+  each(closeCases).it(
+    "returns 'close' for %s at %s[%i]",
+    (letter, solution, index) => {
+      expect(getColorClass(letter, index, solution)).toBe('close');
+    }
+  );
 
-  it("returns 'close' when letter is elsewhere in the word", () => {
-    index = 3;
-
-    expect(getColorClass(letter, index, solution)).toBe('close');
-  });
-
-  it("returns 'incorrect' when letter is not in the word", () => {
-    letter = 'Q';
-    index = 2;
-
-    expect(getColorClass(letter, index, solution)).toBe('incorrect');
-  });
+  each(incorrectCases).it(
+    "returns 'incorrect' for %s at %s[%i]",
+    (letter, solution, index) => {
+      expect(getColorClass(letter, index, solution)).toBe('incorrect');
+    }
+  );
 });
