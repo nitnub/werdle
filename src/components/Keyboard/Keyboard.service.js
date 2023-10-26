@@ -25,6 +25,7 @@ export class KeyboardService {
 
   dispatchKeyEntry(guess) {
     guess = guess.toLowerCase();
+    
     if (this.letters.includes(guess))
       this.dispatch({ type: action.keyEventLetter, payload: guess });
     else if (this.deleteOptions.includes(guess))

@@ -48,11 +48,6 @@ describe('Keyboard test suite', () => {
         expect(screen.getByText(key)).toBeVisible();
       });
     });
-    it.todo('adds letters to board');
-    it.todo('deletes letters from board');
-    it.todo('checks word');
-    it.todo('shows winning modal with correct guess');
-    it.todo('shows losing modal with losing game board is submitted');
   });
 
   const uiKeyboardCases = ['A', 'B', 'Z', 'Del', 'Enter'];
