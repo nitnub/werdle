@@ -1,6 +1,4 @@
-// import { types } from "util";
 
-// export function getColorClass(letter, index, solution) {
 export default function getColorClass(letter, index, solution) {
   if (typeof letter !== 'string' || typeof solution != 'string') {
     return 'incorrect';
