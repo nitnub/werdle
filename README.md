@@ -10,7 +10,7 @@ A clone of the popular word game Wordle. Users can customize the word length and
 
 ## How to Run
 
-This project has been dockerized and is currently deployed to an AWS EC2 instance accessible at [https://werdle.nickbryant.dev/](https://werdle.nickbryant.dev/)![image](https://github.com/nitnub/werdle/assets/45341924/a58398d2-74ab-43dc-b4b6-e523d21660c0)
+This project has been dockerized and is currently deployed to an AWS EC2 instance accessible at [https://werdle.nickbryant.dev/](https://werdle.nickbryant.dev/)
 
 ## Roadmap of Future Improvements
 
