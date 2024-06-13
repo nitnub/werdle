@@ -8,17 +8,12 @@ A clone of the popular word game Wordle. Users can customize the word length and
 - Built with React, utilizing some Bootstrap styling for the Game Over modal
 - At this time, the layout is optimized for desktop, but I plan to enhance the responsiveness in the future
 
-## How to Run
-
-This project has been dockerized and is currently deployed to an AWS EC2 instance accessible at [https://werdle.nickbryant.dev/](https://werdle.nickbryant.dev/)
-
 ## Roadmap of Future Improvements
 
 - Add responsiveness
 - Refactor Components
 - Link to custom "Secret Word" API
 - Add dark/light mode switch
-
 
 ## Test Coverage Report
 
@@ -35,4 +30,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
